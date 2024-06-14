@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myapp
+  name: myapp
+  namespace: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - image: alwx1753/devops-project:1.0
+          imagePullPolicy: IfNotPresent
+          name: myapp
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  namespace: myapp
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+  selector:
+    app: myapp
+  type: NodePort
+

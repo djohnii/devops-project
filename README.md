@@ -224,4 +224,85 @@ flannel_interface_regexp - эта регулярка описывающая, в 
           } 
           > /etc/docker/daemon.json
 
+
+
+## Docker
+https://hub.docker.com/repository/docker/alwx1753/devops-project/general
+### build docker file
+Dockerfile:
+```
+#Берем последнюю версию nginx
+FROM nginx:latest
+
+#Копируем  файл конфиг который находится рядом с dockerfile и помечаем в папку с nginx
+COPY index.html /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/nginx.conf
+#Открываем порт 80 для работы nginx
+EXPOSE 80
+
+#Запускаем команду nginx в фоновом режиме
+CMD ["nginx", "-g", "daemon off;"] 
+# CMD ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/nginx.conf"]
+```
+Выполняем команды:
+```
+docker build -t alwx1753/devops-project .
+docker tag alwx1753/devops-project:latest alwx1753/devops-project:1.0
+docker login
+docker push alwx1753/devops-project:1.0
+```
+
+Чтобы удалить все запущенные контейнеры а затем образы:
+```
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+```
+
+## GIT
+Создал новый репозиторий https://gitlab.com/devops9835924/devops-project
+
+```
+cd existing_repo
+git remote add origin https://gitlab.com/devops9835924/devops-project.git
+git branch -M main
+git push -uf origin main
+
+```
+
+## Monitoring and web app
+Создадим новую область для веб приложения и мониторинга
+```
+kubectl create namespace myapp
+kubectl create namespace web
+kubectl create namespace monitoring
+kubectl get namespace
+```
+
+Для создания мониторинга возьмем helm чарт
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install stable prometheus-community/kube-prometheus-stack --namespace=monitoring
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.0/deploy/static/provider/baremetal/deploy.yaml
+kubectl apply -f ingress.yml -n monitoring
+ kubectl --namespace monitoring get pods -l "release=stable"
+```
+
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && \
+helm repo update && \
+helm install ingress-nginx ingress-nginx/ingress-nginx
+```
+
+Так как у меня кластер k8s является локаьлныи и не имеет loadbalancer мне необходимо исползовать ingress-nginx и nodeport . Для доступа с другой машины необходимо прописать в файле hosts:
+
+```
+
+192.168.27.242 app.test.com
+192.168.27.242 grafana.domen.ru
+```
+
+а так же логин и пароль для графана
+
+```
+UserName: admin Password: prom-operator
 ```

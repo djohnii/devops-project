@@ -6,7 +6,8 @@ pipeline {
                 script{
                     sh 'uname -a'
                     dir('project/docker'){
-                        sh 'docker build -t myweb .'
+                        sh 'ls'
+                        sh 'pwd'
                     }
                 }
             }

@@ -32,7 +32,7 @@ pipeline {
             steps{
                 script{
                     dir('project/k8s'){
-                        kubernetesDeploy (configs:'myapp-deploy.yml', kubeconfigId:'k8s' )
+                        sh 'kubectl apply -t myapp-deploy.yml -n jenkins '
                     }
 
                 }

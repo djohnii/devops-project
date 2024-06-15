@@ -15,10 +15,6 @@ pipeline {
                     echo "gitTag output: ${gitTag}"
                     dir('project/docker'){
                         dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                        gittag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
-                        echo "${gittag}"
-
-          
                     }
                 }
             }

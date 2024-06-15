@@ -8,13 +8,6 @@ pipeline {
         dockerImage = ''
     }
     stages {
-        stage('check git'){
-            steps{
-                script{
-                    git branch: 'main', url: 'https://github.com/djohnii/devops-project.git'
-                }
-            }
-        }
         stage('build docker image'){
             steps{
                 script{

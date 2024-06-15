@@ -2,6 +2,10 @@ pipeline {
     agent {
         label "agent-1"
     } 
+    environment {
+        registry = "alwx1753/devops-project"
+        registryCredential = 'dockerhub'
+    }
     stages {
         stage('test'){
             steps{
@@ -10,6 +14,7 @@ pipeline {
                     dir('project/docker'){
                         sh 'ls'
                         sh 'pwd'
+                        docker.build registry + ":$BUILD_NUMBER"
                     }
                 }
             }

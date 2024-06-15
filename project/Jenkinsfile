@@ -5,6 +5,7 @@ pipeline {
     environment {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
+        dockerImage = ''
     }
     stages {
         stage('build docker image'){

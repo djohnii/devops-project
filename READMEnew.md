@@ -10,7 +10,62 @@
 
 [docker](./project/docker)
 
-# Решение1: Docker, Gitlub , Gitlab CI, ansible kuberspay
+
+# Решение1: Docker, Jenkins, Github, k8s_yandex_cloud
+В данном решение используются:
+`#CICD`: Jenkins localhost with public ip
+Kubernetes: k8s yandex cloud
+IAC: Terraform
+Git repo: Github
+
+##  k8s_yandex_cloud
+Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)
+```
+terraform init
+terraform apply --auto-approve
+```
+После создания кластера на сервере с предустановленным yandex CLI , чтобы получить конфиг файл кластера k8s по пути ``~/.kube/config`` необходимо выполнить команду:
+```
+yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
+```
+### Настраиваем кластер k8s для работы jenkins
+- создаем новую область для работы jenkins
+  ```
+  -kubectl create namespace jenkins
+  ```
+- создаем пользователя и токен ключ для работы jenkins 
+  ```
+  kubectl create sa jenkins -n jenkins
+  kubectl create token jenkins -n jenkins --duration=8760h
+- добавляем роль 
+  ```
+  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
+  ```
+Теперь можно вывести конфиг командой ``kubectl config view``
+## Github
+- Создал [GitHub](https://github.com/djohnii/devops-project) репозиторий 
+- Настроил webhooks в [github](https://github.com/djohnii/devops-project/settings/hooks)
+  ![alt text](image.png)
+## Jenkins
+- Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
+- установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
+- настроил kubernetes cloud 
+  ![alt text](image-1.png)
+- написал [jenkinsfile](./project/Jenkinsfile)
+
+Далее для теста выполняю следующее
+- редактирую любой файл в репозитории [GitHub](https://github.com/djohnii/devops-project)
+- выполняю команду  ``git add --all && git commit -m "test kube" && git push``
+- jenkins автоматически запускает pipeline
+  ![alt text](image-2.png)
+- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
+- проверяем сборку в [dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
+  ![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+
+# Решение2: Docker, Gitlub , Gitlab CI, ansible kuberspay
 ##  Docker
 репозиторий: https://hub.docker.com/repository/docker/alwx1753/devops-project/general
 
@@ -163,53 +218,4 @@ deploy:
     - tags
 
 ```
-# Решение2 Jenkins, Github, k8s_yandex_cloud
-##  k8s_yandex_cloud
-Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)
-```
-terraform init
-terraform apply --auto-approve
-```
-После создания кластера на сервере с предустановленным yandex CLI , чтобы получить конфиг файл кластера k8s по пути ``~/.kube/config`` необходимо выполнить команду:
-```
-yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
-```
-### Настраиваем кластер k8s для работы jenkins
-- создаем новую область для работы jenkins
-  ```
-  -kubectl create namespace jenkins
-  ```
-- создаем пользователя и токен ключ для работы jenkins 
-  ```
-  kubectl create sa jenkins -n jenkins
-  kubectl create token jenkins -n jenkins --duration=8760h
-- добавляем роль 
-  ```
-  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
-  ```
-Теперь можно вывести конфиг командой ``kubectl config view``
-## Github
-- Создал [GitHub](https://github.com/djohnii/devops-project) репозиторий 
-- Настроил webhooks в [github](https://github.com/djohnii/devops-project/settings/hooks)
-  ![alt text](image.png)
-## Jenkins
-- Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
-- установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
-- настроил kubernetes cloud 
-  ![alt text](image-1.png)
-- написал [jenkinsfile](./project/Jenkinsfile)
-
-Далее для теста выполняю следующее
-- редактирую любой файл в репозитории [GitHub](https://github.com/djohnii/devops-project)
-- выполняю команду  ``git add --all && git commit -m "test kube" && git push``
-- jenkins автоматически запускает pipeline
-  ![alt text](image-2.png)
-- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
-- проверяем сборку в [dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
-  ![alt text](image-3.png)
-
-![alt text](image-4.png)
-
-
-
 

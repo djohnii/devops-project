@@ -13,10 +13,10 @@
 
 # Решение1: Docker, Jenkins, Github, k8s_yandex_cloud
 В данном решение используются:
-- `#CICD`: Jenkins localhost with public ip
-- `#Kubernetes:` k8s yandex cloud
-- `#IAC:` Terraform
-- `#Git` repo: Github
+- `CICD`: Jenkins localhost with public ip
+- `Kubernetes:` k8s yandex cloud
+- `IAC:` Terraform
+- `Git` repo: Github
 
 ##  k8s_yandex_cloud
 Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)

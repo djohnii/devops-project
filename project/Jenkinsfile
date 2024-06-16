@@ -32,7 +32,7 @@ pipeline {
             steps{
                 script{
                     dir('project/k8s'){
-                        sh 'kubectl apply -t myapp-deploy.yml -t jenkins '
+                        sh 'kubectl delete -f myapp.yml -n jenkins'
                     }
 
                 }

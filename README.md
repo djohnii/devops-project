@@ -403,4 +403,6 @@ yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --extern
 Далее для теста выполняю следующее
 - редактирую любой файл в репозитории ![GitHub](https://github.com/djohnii/devops-project)
 - выполняю команду  ``git add --all && git commit -m "test kube" && git push``
-
+- jenkins автоматически запускает pipeline
+  ![alt text](image-2.png)
+- выполняю команду  ``git add --all && git commit -m "test kube" && git tag mytesttag $$ git push --tags``

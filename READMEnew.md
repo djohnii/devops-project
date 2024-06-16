@@ -1,92 +1,10 @@
-# Выполнение
-## 1 terraform
-[директория](./project/terraform)
-
-## 2 k8s
-### 2.1 Установка используя ansible
-Рабочая директрия  [директориы](./project/ansible/kubespay/)  
-#### 2.1.1 Установка окружения ansible на рабочий хост
-
-```
-apt install python39
-apt install git
-git clone https://github.com/kubernetes-sigs/kubespray
-pip3 install -r requirements.txt
-```
-
-Далее копируем инвентори . Для нового имени используем имя кластера
-
- ``cp -rp inventory/sample/ inventory/k8s-dev-cluster``
-
- `` tree inventory/k8s-dev-cluster/ -L 1``
-
- И правим наш инвентори 
-
-```
- [all]
-node1 ansible_host=192.168.27.242  # ip=10.3.0.1 etcd_member_name=etcd1
-node2 ansible_host=192.168.27.151  # ip=10.3.0.2 etcd_member_name=etcd2
-node3 ansible_host=192.168.27.154  # ip=10.3.0.3 etcd_member_name=etcd3
-
-[kube_control_plane]
-node1
-
-[etcd]
-node1
-
-[kube_node]
-node2
-node3
-
-[calico_rr]
-
-[k8s_cluster:children]
-kube_control_plane
-kube_node
-calico_rr
-```
-
-Далее переходим к файлу  inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-cluster.yml
-
-```
-
-cluster_name - тут в значении указывается имя кластера,
-kube_version - версия кластера, по умолчанию стоит самая последняя версия
-kube_network_plugin - используемый сетевой плагин (cni). В этом сетапе я буду использовать flannel. Этот плагин намного проще, и идеально вписывается в нашу конценцию где все ноды кластера работают из одной сети.
-kube_proxy_mode - режим проксирования, по умолчанию стоит ipvs. Я всеже предпочитаю iptables.
-kube_service_addresses - здесь прописываем адресный пул, ip-адреса из которой будут выдаваться нашим сервисом с режимом работы ClusterIP.
-kube_pods_subnet - и здесь указывается пул, из которого будут выдаваться адреса для подов.
-dns_mode - здесь указываем dns сервер, который будет обслуживать наш кластер
-kubeconfig_localhost - а включение этой опции, сгенерит kube-конфиг для подключения к кластеру.
-
-```
-
-Переходим к файлу m inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-net-flannel.yml
-
-```
-
-flannel_backend_type - здесь мы переопределяем режим работы плагина, на режим host gateway.
-flannel_interface_regexp - эта регулярка описывающая, в какой сети у меня будут подняты сервера
-
-```
+# Дипломная работа
 
 
-          {
-            "registry-mirrors": [
-              "https://mirror.gcr.io",
-              "https://daocloud.io",
-              "https://c.163.com/",
-              "https://huecker.io/",
-              "https://registry.docker-cn.com"
-            ]
-          } 
-          > /etc/docker/daemon.json
+# Решение1: Docker, Gitlub , Gitlab CI, ansible kuberspay
+##  Docker
+репозиторий: https://hub.docker.com/repository/docker/alwx1753/devops-project/general
 
-
-
-## Docker
-https://hub.docker.com/repository/docker/alwx1753/devops-project/general
-### build docker file
 Dockerfile:
 ```
 #Берем последнюю версию nginx
@@ -116,7 +34,19 @@ docker rm $(docker ps -a -q)
 docker rmi $(docker images -q)
 ```
 
-# Решение1: Gitlub , Gitlab CI, ansible kuberspay
+Решение проблемы с dockerhub
+/etc/docker/daemon.json:
+```
+          {
+            "registry-mirrors": [
+              "https://mirror.gcr.io",
+              "https://daocloud.io",
+              "https://c.163.com/",
+              "https://huecker.io/",
+              "https://registry.docker-cn.com"
+            ]
+          } 
+```
 ## Kuberspay
 У меня уже есть сови 3 виртуальные машины. Поэтому я добавляю данные в devops-project/project/ansible/kubespay/kubespray/inventory/k8s-dev-cluster/inventory.ini
 ```
@@ -268,3 +198,75 @@ yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --extern
   ![alt text](image-3.png)
 
 ![alt text](image-4.png)
+
+
+### этапы
+
+## 1 terraform
+[директория](./project/terraform)
+
+## 2 k8s
+### 2.1 Установка используя ansible
+Рабочая директрия  [директориы](./project/ansible/kubespay/)  
+#### 2.1.1 Установка окружения ansible на рабочий хост
+
+```
+apt install python39
+apt install git
+git clone https://github.com/kubernetes-sigs/kubespray
+pip3 install -r requirements.txt
+```
+
+Далее копируем инвентори . Для нового имени используем имя кластера
+
+ ``cp -rp inventory/sample/ inventory/k8s-dev-cluster``
+
+ `` tree inventory/k8s-dev-cluster/ -L 1``
+
+ И правим наш инвентори 
+
+```
+ [all]
+node1 ansible_host=192.168.27.242  # ip=10.3.0.1 etcd_member_name=etcd1
+node2 ansible_host=192.168.27.151  # ip=10.3.0.2 etcd_member_name=etcd2
+node3 ansible_host=192.168.27.154  # ip=10.3.0.3 etcd_member_name=etcd3
+
+[kube_control_plane]
+node1
+
+[etcd]
+node1
+
+[kube_node]
+node2
+node3
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+calico_rr
+```
+
+Далее переходим к файлу  inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-cluster.yml
+
+```
+
+cluster_name - тут в значении указывается имя кластера,
+kube_version - версия кластера, по умолчанию стоит самая последняя версия
+kube_network_plugin - используемый сетевой плагин (cni). В этом сетапе я буду использовать flannel. Этот плагин намного проще, и идеально вписывается в нашу конценцию где все ноды кластера работают из одной сети.
+kube_proxy_mode - режим проксирования, по умолчанию стоит ipvs. Я всеже предпочитаю iptables.
+kube_service_addresses - здесь прописываем адресный пул, ip-адреса из которой будут выдаваться нашим сервисом с режимом работы ClusterIP.
+kube_pods_subnet - и здесь указывается пул, из которого будут выдаваться адреса для подов.
+dns_mode - здесь указываем dns сервер, который будет обслуживать наш кластер
+kubeconfig_localhost - а включение этой опции, сгенерит kube-конфиг для подключения к кластеру.
+
+```
+
+Переходим к файлу m inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-net-flannel.yml
+
+```
+
+flannel_backend_type - здесь мы переопределяем режим работы плагина, на режим host gateway.
+flannel_interface_regexp - эта регулярка описывающая, в какой сети у меня будут подняты сервера

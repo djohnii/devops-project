@@ -33,7 +33,7 @@ pipeline {
                 script{
                     dir('project/k8s'){
                         kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
-                            sh 'kubectl get pod'
+                            sh 'kubectl get pod -n jenkins'
                         }
 
                     }

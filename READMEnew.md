@@ -48,7 +48,7 @@ docker rmi $(docker images -q)
           } 
 ```
 ## Kuberspay
-У меня уже есть сови 3 виртуальные машины. Поэтому я добавляю данные в devops-project/project/ansible/kubespay/kubespray/inventory/k8s-dev-cluster/inventory.ini
+У меня уже есть свои 3 виртуальные машины. Поэтому я добавляю данные в devops-project/project/ansible/kubespay/kubespray/inventory/k8s-dev-cluster/inventory.ini
 ```
 [all]
 node1 ansible_host=192.168.27.242  ansible_user=root ansible_ssh_port=22 ansible_ssh_private_key_file=/root/.ssh/id_rsanew
@@ -120,6 +120,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 ```
 UserName: admin Password: prom-operator
 ```
+![image](https://github.com/djohnii/devops-project/assets/91311426/93c743c6-ad1c-4b72-8915-4436564e19ee)
+![image](https://github.com/djohnii/devops-project/assets/91311426/6ab63bfd-7114-42f5-84f6-8d0ef0dc0878)
 
 ## CI/CD
 

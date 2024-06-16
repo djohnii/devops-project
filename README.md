@@ -405,4 +405,6 @@ yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --extern
 - выполняю команду  ``git add --all && git commit -m "test kube" && git push``
 - jenkins автоматически запускает pipeline
   ![alt text](image-2.png)
-- выполняю команду  ``git add --all && git commit -m "test kube" && git tag mytesttag $$ git push --tags``
+- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
+- проверяем сборку в ![dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
+  ![alt text](image-3.png)

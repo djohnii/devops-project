@@ -1,10 +1,15 @@
 # Дипломная работа
 
 [Весь код в директории](./project/)
+
 [terraform](./project/terraform)
+
 [terraform-k8s](./project/terraform/k8s)
+
 [k8s](./project/k8s)
+
 [docker](./project/docker)
+
 # Решение1: Docker, Gitlub , Gitlab CI, ansible kuberspay
 ##  Docker
 репозиторий: https://hub.docker.com/repository/docker/alwx1753/devops-project/general

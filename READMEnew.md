@@ -156,7 +156,7 @@ deploy:
 ```
 # Решение2 Jenkins, Github, k8s_yandex_cloud
 ##  k8s_yandex_cloud
-Создаю кластер kubernetes и  узлы используя !['terraform'](./project/terraform/k8s/)
+Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)
 ```
 terraform init
 terraform apply --auto-approve

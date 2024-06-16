@@ -188,7 +188,7 @@ yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --extern
 - установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
 - настроил kubernetes cloud 
   ![alt text](image-1.png)
-- написал ![jenkinsfile](./project/Jenkinsfile)
+- написал [jenkinsfile](./project/Jenkinsfile)
 
 Далее для теста выполняю следующее
 - редактирую любой файл в репозитории [GitHub](https://github.com/djohnii/devops-project)

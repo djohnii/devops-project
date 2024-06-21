@@ -1,7 +1,71 @@
 # Дипломная работа
 
+[Весь код в директории](./project/)
 
-# Решение1: Docker, Gitlub , Gitlab CI, ansible kuberspay
+[terraform](./project/terraform)
+
+[terraform-k8s](./project/terraform/k8s)
+
+[k8s](./project/k8s)
+
+[docker](./project/docker)
+
+
+# Решение1: Docker, Jenkins, Github, k8s_yandex_cloud
+В данном решение используются:
+- `CICD`: Jenkins localhost with public ip
+- `Kubernetes:` k8s yandex cloud
+- `IAC:` Terraform
+- `Git` repo: Github
+
+##  k8s_yandex_cloud
+Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)
+```
+terraform init
+terraform apply --auto-approve
+```
+После создания кластера на сервере с предустановленным yandex CLI , чтобы получить конфиг файл кластера k8s по пути ``~/.kube/config`` необходимо выполнить команду:
+```
+yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
+```
+### Настраиваем кластер k8s для работы jenkins
+- создаем новую область для работы jenkins
+  ```
+  -kubectl create namespace jenkins
+  ```
+- создаем пользователя и токен ключ для работы jenkins 
+  ```
+  kubectl create sa jenkins -n jenkins
+  kubectl create token jenkins -n jenkins --duration=8760h
+- добавляем роль 
+  ```
+  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
+  ```
+Теперь можно вывести конфиг командой ``kubectl config view``
+## Github
+- Создал [GitHub](https://github.com/djohnii/devops-project) репозиторий 
+- Настроил webhooks в [github](https://github.com/djohnii/devops-project/settings/hooks)
+  ![alt text](image.png)
+## Jenkins
+- Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
+- установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
+- настроил kubernetes cloud 
+  ![alt text](image-1.png)
+- написал [jenkinsfile](./project/Jenkinsfile)
+
+Далее для теста выполняю следующее
+- редактирую любой файл в репозитории [GitHub](https://github.com/djohnii/devops-project)
+- выполняю команду  ``git add --all && git commit -m "test kube" && git push``
+- jenkins автоматически запускает pipeline
+  ![alt text](image-2.png)
+- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
+- проверяем сборку в [dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
+  ![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+
+# Решение2: Docker, Gitlub , Gitlab CI, ansible kuberspay
 ##  Docker
 репозиторий: https://hub.docker.com/repository/docker/alwx1753/devops-project/general
 
@@ -48,7 +112,7 @@ docker rmi $(docker images -q)
           } 
 ```
 ## Kuberspay
-У меня уже есть сови 3 виртуальные машины. Поэтому я добавляю данные в devops-project/project/ansible/kubespay/kubespray/inventory/k8s-dev-cluster/inventory.ini
+У меня уже есть свои 3 виртуальные машины. Поэтому я добавляю данные в devops-project/project/ansible/kubespay/kubespray/inventory/k8s-dev-cluster/inventory.ini
 ```
 [all]
 node1 ansible_host=192.168.27.242  ansible_user=root ansible_ssh_port=22 ansible_ssh_private_key_file=/root/.ssh/id_rsanew
@@ -120,6 +184,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 ```
 UserName: admin Password: prom-operator
 ```
+![image](https://github.com/djohnii/devops-project/assets/91311426/93c743c6-ad1c-4b72-8915-4436564e19ee)
+![image](https://github.com/djohnii/devops-project/assets/91311426/6ab63bfd-7114-42f5-84f6-8d0ef0dc0878)
 
 ## CI/CD
 
@@ -152,121 +218,4 @@ deploy:
     - tags
 
 ```
-# Решение2 Jenkins, Github, k8s_yandex_cloud
-##  k8s_yandex_cloud
-Создаю кластер kubernetes и  узлы используя ![terraform](./project/terraform/k8s/)
-```
-terraform init
-terraform apply --auto-approve
-```
-После создания кластера на сервере с предустановленным yandex CLI , чтобы получить конфиг файл кластера k8s по пути ``~/.kube/config`` необходимо выполнить команду:
-```
-yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
-```
-### Настраиваем кластер k8s для работы jenkins
-- создаем новую область для работы jenkins
-  ```
-  -kubectl create namespace jenkins
-  ```
-- создаем пользователя и токен ключ для работы jenkins 
-  ```
-  kubectl create sa jenkins -n jenkins
-  kubectl create token jenkins -n jenkins --duration=8760h
-- добавляем роль 
-  ```
-  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
-  ```
-Теперь можно вывести конфиг командой ``kubectl config view``
-## Github
-- Создал ![GitHub](https://github.com/djohnii/devops-project) репозиторий 
-- Настроил webhooks в ![github](https://github.com/djohnii/devops-project/settings/hooks)
-  ![alt text](image.png)
-## Jenkins
-- Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
-- установил несколько плагинов: ![kubernetes](https://plugins.jenkins.io/kubernetes-cli/),![docker](https://plugins.jenkins.io/docker-worcflow),![github](https://plugins.jenkins.io/github-api/) ![Blue Ocean](https://plugins.jenkins.io/blueocean/)
-- настроил kubernetes cloud 
-  ![alt text](image-1.png)
-- написал ![jenkinsfile](./project/Jenkinsfile)
 
-Далее для теста выполняю следующее
-- редактирую любой файл в репозитории ![GitHub](https://github.com/djohnii/devops-project)
-- выполняю команду  ``git add --all && git commit -m "test kube" && git push``
-- jenkins автоматически запускает pipeline
-  ![alt text](image-2.png)
-- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
-- проверяем сборку в ![dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
-  ![alt text](image-3.png)
-
-![alt text](image-4.png)
-
-
-### этапы
-
-## 1 terraform
-[директория](./project/terraform)
-
-## 2 k8s
-### 2.1 Установка используя ansible
-Рабочая директрия  [директориы](./project/ansible/kubespay/)  
-#### 2.1.1 Установка окружения ansible на рабочий хост
-
-```
-apt install python39
-apt install git
-git clone https://github.com/kubernetes-sigs/kubespray
-pip3 install -r requirements.txt
-```
-
-Далее копируем инвентори . Для нового имени используем имя кластера
-
- ``cp -rp inventory/sample/ inventory/k8s-dev-cluster``
-
- `` tree inventory/k8s-dev-cluster/ -L 1``
-
- И правим наш инвентори 
-
-```
- [all]
-node1 ansible_host=192.168.27.242  # ip=10.3.0.1 etcd_member_name=etcd1
-node2 ansible_host=192.168.27.151  # ip=10.3.0.2 etcd_member_name=etcd2
-node3 ansible_host=192.168.27.154  # ip=10.3.0.3 etcd_member_name=etcd3
-
-[kube_control_plane]
-node1
-
-[etcd]
-node1
-
-[kube_node]
-node2
-node3
-
-[calico_rr]
-
-[k8s_cluster:children]
-kube_control_plane
-kube_node
-calico_rr
-```
-
-Далее переходим к файлу  inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-cluster.yml
-
-```
-
-cluster_name - тут в значении указывается имя кластера,
-kube_version - версия кластера, по умолчанию стоит самая последняя версия
-kube_network_plugin - используемый сетевой плагин (cni). В этом сетапе я буду использовать flannel. Этот плагин намного проще, и идеально вписывается в нашу конценцию где все ноды кластера работают из одной сети.
-kube_proxy_mode - режим проксирования, по умолчанию стоит ipvs. Я всеже предпочитаю iptables.
-kube_service_addresses - здесь прописываем адресный пул, ip-адреса из которой будут выдаваться нашим сервисом с режимом работы ClusterIP.
-kube_pods_subnet - и здесь указывается пул, из которого будут выдаваться адреса для подов.
-dns_mode - здесь указываем dns сервер, который будет обслуживать наш кластер
-kubeconfig_localhost - а включение этой опции, сгенерит kube-конфиг для подключения к кластеру.
-
-```
-
-Переходим к файлу m inventory/k8s-dev-cluster/group_vars/k8s_cluster/k8s-net-flannel.yml
-
-```
-
-flannel_backend_type - здесь мы переопределяем режим работы плагина, на режим host gateway.
-flannel_interface_regexp - эта регулярка описывающая, в какой сети у меня будут подняты сервера

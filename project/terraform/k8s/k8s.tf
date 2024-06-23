@@ -59,8 +59,8 @@ resource "yandex_kubernetes_cluster" "regional_cluster" {
       }
 
       location {
-        zone      = "${yandex_vpc_subnet.dev_public_c.zone}"
-        subnet_id = "${yandex_vpc_subnet.dev_public_c.id}"
+        zone      = "${yandex_vpc_subnet.dev_public_d.zone}"
+        subnet_id = "${yandex_vpc_subnet.dev_public_d.id}"
       }
     }
     version   = "1.27"

@@ -124,9 +124,9 @@ resource "yandex_kubernetes_node_group" "my_node_group-b" {
 ##Node group 3
 
 
-resource "yandex_kubernetes_node_group" "my_node_group-c" {
+resource "yandex_kubernetes_node_group" "my_node_group-d" {
   cluster_id  = yandex_kubernetes_cluster.regional_cluster.id
-  name        = "devops-node-c"
+  name        = "devops-node-d"
   description = "description"
   version     = "1.27"
   instance_template {
@@ -134,7 +134,7 @@ resource "yandex_kubernetes_node_group" "my_node_group-c" {
 
     network_interface {
       nat                = true
-      subnet_ids         = [yandex_vpc_subnet.dev_public_c.id]
+      subnet_ids         = [yandex_vpc_subnet.dev_public_d.id]
     }
     resources {
       memory = 2
@@ -163,7 +163,7 @@ resource "yandex_kubernetes_node_group" "my_node_group-c" {
 
   allocation_policy {
     location {
-      zone = "ru-central1-c"
+      zone = yandex_vpc_subnet.dev_public_d.zone
     }
   }
 
@@ -186,7 +186,15 @@ resource "yandex_kubernetes_node_group" "my_node_group-c" {
 }
 
 
-
-
+# provider "kubernetes" {
+#   alias = "lke"
+#   load_config_file = "true"
+#   config_path = "/root/tfkubeconfig"
+# }
+resource "null_resource" "kubectl" {
+    provisioner "local-exec" {
+        command = "yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.regional_cluster.id} --external"
+    }
+}
 
 

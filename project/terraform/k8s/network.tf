@@ -16,9 +16,9 @@ resource "yandex_vpc_subnet" "dev_public_b" {
   zone           = "ru-central1-b"
   network_id     = "${yandex_vpc_network.devops_project.id}"
 }
-resource "yandex_vpc_subnet" "dev_public_c" {
-  name           = "dev_public_c"
+resource "yandex_vpc_subnet" "dev_public_d" {
+  name           = "dev_public_d"
   v4_cidr_blocks = ["192.168.60.0/24"]
-  zone           = "ru-central1-c"
+  zone           = "ru-central1-d"
   network_id     = "${yandex_vpc_network.devops_project.id}"
 }

@@ -17,18 +17,25 @@ pipeline {
                 script{
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
+                        TAG = sh (
+                            returnStdout: true,
+                            script: 'git fetch --tags && git tag --points-at HEAD | awk NF'
+                            ).trim()
+                        echo "${TAG}"
 
 
-                        checkout scm
+                        // checkout scm
+                        // def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)
+                        // if (gitTag == 0) {
+                        //     env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        // } else {
+                        //     env.GIT_TAG = "No tag found"
+                        // }
+                        // echo "Current tag: ${env.GIT_TAG}"
 
-                        def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)
-                        if (gitTag == 0) {
-                            env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
-                        } else {
-                            env.GIT_TAG = "No tag found"
-                        }
 
-                        echo "Current tag: ${env.GIT_TAG}"
+
+
                         // env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
                         // env.GIT_TAG_MESSAGE = sh(script: "git tag -n10000 -l ${env.GIT_TAG}", returnStdout: true).trim()
                         // def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)

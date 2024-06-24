@@ -19,8 +19,13 @@ pipeline {
                     dir('git_branch'){
                         env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
                         env.GIT_TAG_MESSAGE = sh(script: "git tag -n10000 -l ${env.GIT_TAG}", returnStdout: true).trim()
+                        def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)
+                        if (gitTag == 0) {
+                            env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        } else {
+                            env.GIT_TAG = "No tag found"
+                        }
                         echo "Current tag: ${env.GIT_TAG}"
-                        echo "Tag message: ${env.GIT_TAG_MESSAGE}"
                         // git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
                         // sh 'git fetch'
                         // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()

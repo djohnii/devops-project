@@ -3,6 +3,9 @@ pipeline {
         label "agent-1"
     } 
     environment {
+        git url: 'https://github.com/jenkinsci/git-tag-message-plugin'
+        env.GIT_TAG_NAME = gitTagName()
+        env.GIT_TAG_MESSAGE = gitTagMessage()
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
@@ -11,19 +14,22 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-                    echo "gitTag output: ${gitTag}"
-                    dir('project/docker'){
-                        dockerImage = docker.build registry + ":${gitTag}"
-                    }
+                    echo "get git tag"
+                    echo ${GIT_TAG_MESSAGE}
+                    // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                    // echo "gitTag output: ${gitTag}"
+                    // dir('project/docker'){
+                    //     dockerImage = docker.build registry + ":${gitTag}"
+                    // }
                 }
             }
         }
         stage('deploy image') {
             steps{
                 script{
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push("${gitTag}")
+                    echo "deploy image"
+                    // docker.withRegistry( '', registryCredential ) {
+                    //     dockerImage.push("${gitTag}")
                     }
                 }
             }
@@ -31,14 +37,15 @@ pipeline {
         stage('deploy to k8s'){
             steps{
                 script{
-                    dir('project/k8s'){
-                        kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
-                            sh 'kubectl get pod -n jenkins'
-                            sh 'kubectl apply -f myapp.yml -n jenkins'
-                            sh 'kubectl apply -f ingress.yml -n jenkins'
-                        }
+                    echo "deploy to k8s"
+                    // dir('project/k8s'){
+                    //     kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
+                    //         sh 'kubectl get pod -n jenkins'
+                    //         sh 'kubectl apply -f myapp.yml -n jenkins'
+                    //         sh 'kubectl apply -f ingress.yml -n jenkins'
+                    //     }
 
-                    }
+                    // }
 
                 }
             }

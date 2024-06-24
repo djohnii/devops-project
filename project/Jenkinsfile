@@ -14,14 +14,7 @@ pipeline {
             steps{
                 script{
                     echo "get git tag1"
-                    checkout([$class: 'GitSCM',
-                          branches: [[name: "${params.TAG}"]],
-                          doGenerateSubmoduleConfigurations: false,
-                          extensions: [],
-                          gitTool: 'Default',
-                          submoduleCfg: [],
-                          userRemoteConfigs: [[url: 'https://github.com/djohnii/devops-project.git']]
-                    ])
+                    echo ${env.GIT_TAG_NAME}
                     // checkout scm
                     // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     // echo "gitTag output: ${gitTag}"

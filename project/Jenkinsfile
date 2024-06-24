@@ -37,19 +37,16 @@ pipeline {
                     }
                 }
             }
-
+        }
         stage('deploy to k8s'){
             steps{
                 script{
                     echo "deploy to k8s"
                     dir('project/k8s'){
                         kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
-
                             sh 'kubectl apply -f myapp.yml ingress.yml -n jenkins'
                         }
-
                     }
-
                 }
             }
         }

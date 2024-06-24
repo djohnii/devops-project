@@ -25,7 +25,7 @@ pipeline {
         }
         stage('test build tag') {
             when {
-                buildingTag()
+                 tag "release-*"
             }
             steps{
                 script{

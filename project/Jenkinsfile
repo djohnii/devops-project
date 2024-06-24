@@ -17,7 +17,7 @@ pipeline {
                     dir('git_branch'){
                         echo "TEEEEEEEEEEST5"
                         sh(returnStdout: true, script: "git tag --contains").trim()
-                        echo "222222222222222"
+                        echo "222222222222222222"
                         sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
                         echo "333333333333333333"
                         git branch: 'main', credentialsId: 'key2', url: 'https://github.com/djohnii/devops-project.git'

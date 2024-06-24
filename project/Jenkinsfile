@@ -13,7 +13,7 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    sh "mkdir -r git_branch"
+                    sh "mkdir -p git_branch"
                     dir('git_branch'){
                         echo "get git tag1"
                         git branch: 'main', credentialsId: 'key2', url: 'https://github.com/djohnii/devops-project.git'

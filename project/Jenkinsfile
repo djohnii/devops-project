@@ -14,7 +14,15 @@ pipeline {
             steps{
                 script{
                     echo "get git tag1"
-                    checkout scm
+                    checkout([$class: 'GitSCM',
+                          branches: [[name: "${params.TAG}"]],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [],
+                          gitTool: 'Default',
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[url: 'https://github.com/djohnii/devops-project.git']]
+                    ])
+                    // checkout scm
                     // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     // echo "gitTag output: ${gitTag}"
                     // dir('project/docker'){
@@ -29,7 +37,7 @@ pipeline {
             }
             steps{
                 script{
-                    echo "test tag work"
+                    echo "test tag work12"
                     // docker.withRegistry( '', registryCredential ) {
                     //     dockerImage.push("${gitTag}")
                     }

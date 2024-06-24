@@ -29,7 +29,7 @@ pipeline {
             }
             steps{
                 script{
-                    echo "deploy image"
+                    echo "test tag work"
                     // docker.withRegistry( '', registryCredential ) {
                     //     dockerImage.push("${gitTag}")
                     }

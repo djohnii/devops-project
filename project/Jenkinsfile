@@ -8,8 +8,8 @@ pipeline {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        env.GIT_TAG_NAME = gitTagName()
-        env.GIT_TAG_MESSAGE = gitTagMessage()
+        def GIT_TAG_NAME = gitTagName()
+        def GIT_TAG_MESSAGE = gitTagMessage()
     }
     stages {
         stage('build docker image'){

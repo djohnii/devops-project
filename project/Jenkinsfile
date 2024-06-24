@@ -17,38 +17,42 @@ pipeline {
                 script{
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
-                        git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
-                        sh 'git fetch'
-                        gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-                        echo "gitTag output: ${gitTag}"
+                        env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        env.GIT_TAG_MESSAGE = sh(script: "git tag -n10000 -l ${env.GIT_TAG}", returnStdout: true).trim()
+                        echo "Current tag: ${env.GIT_TAG}"
+                        echo "Tag message: ${env.GIT_TAG_MESSAGE}"
+                        // git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
+                        // sh 'git fetch'
+                        // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                        // echo "gitTag output: ${gitTag}"
                     }
                 }
             }
         }
-        stage('test build tag') {
-            // when {
-            //      tag "release-*"
-            // }
-            steps{
-                script{
-                    echo "test tag work12"
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push("${gitTag}")
-                    }
-                }
-            }
-        }
-        stage('deploy to k8s'){
-            steps{
-                script{
-                    echo "deploy to k8s"
-                    dir('project/k8s'){
-                        kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
-                            sh 'kubectl apply -f myapp.yml ingress.yml -n jenkins'
-                        }
-                    }
-                }
-            }
-        }
+        // stage('test build tag') {
+        //     // when {
+        //     //      tag "release-*"
+        //     // }
+        //     steps{
+        //         script{
+        //             echo "test tag work12"
+        //             docker.withRegistry( '', registryCredential ) {
+        //                 dockerImage.push("${gitTag}")
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('deploy to k8s'){
+        //     steps{
+        //         script{
+        //             echo "deploy to k8s"
+        //             dir('project/k8s'){
+        //                 kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
+        //                     sh 'kubectl apply -f myapp.yml ingress.yml -n jenkins'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

@@ -15,7 +15,7 @@ pipeline {
                 script{
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
-                        echo "TEEEEEEEEEEST"
+                        echo "TEEEEEEEEEEST2"
                         git branch: 'main', credentialsId: 'key2', url: 'https://github.com/djohnii/devops-project.git'
                         sh 'git fetch'
                         gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()

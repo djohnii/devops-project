@@ -8,7 +8,7 @@ pipeline {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        def gitTag = ''
+        gitTag = ''
         
     }
     stages {
@@ -44,6 +44,7 @@ pipeline {
                     echo "deploy to k8s"
                     dir('project/k8s'){
                         kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
+
                             sh 'kubectl apply -f myapp.yml ingress.yml -n jenkins'
                         }
 

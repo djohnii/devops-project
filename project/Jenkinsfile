@@ -17,6 +17,7 @@ pipeline {
                 script{
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
+                        git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
                         TAG = sh (
                             returnStdout: true,
                             script: 'git fetch --tags && git tag --points-at HEAD | awk NF'

@@ -14,7 +14,7 @@ pipeline {
             steps{
                 script{
                     echo "get git tag1"
-                    echo GIT_TAG_MESSAGE
+                    echo ${GIT_TAG_MESSAGE}
                     // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     // echo "gitTag output: ${gitTag}"
                     // dir('project/docker'){

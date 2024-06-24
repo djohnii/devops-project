@@ -23,7 +23,7 @@ pipeline {
                 }
             }
         }
-        stage('deploy image') {
+        stage('test build tag') {
             when {
                 buildingTag()
             }

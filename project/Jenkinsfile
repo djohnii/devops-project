@@ -14,10 +14,7 @@ pipeline {
             steps{
                 script{
                     echo "get git tag1"
-                    git branch: 'main', url: 'https://github.com/djohnii/devops-project.git'
-                    sh 'git fetch'
-                    gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-                    echo "gitTag output: ${gitTag}"
+                    checkout scm
                     // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     // echo "gitTag output: ${gitTag}"
                     // dir('project/docker'){
@@ -27,6 +24,9 @@ pipeline {
             }
         }
         stage('deploy image') {
+            when {
+                buildingTag()
+            }
             steps{
                 script{
                     echo "deploy image"

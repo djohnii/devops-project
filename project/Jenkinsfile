@@ -3,8 +3,8 @@ pipeline {
         label "agent-1"
     } 
     environment {
-        env.GIT_TAG_NAME = gitTagName()
-        env.GIT_TAG_MESSAGE = gitTagMessage()
+        // env.GIT_TAG_NAME = gitTagName()
+        // env.GIT_TAG_MESSAGE = gitTagMessage()
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''

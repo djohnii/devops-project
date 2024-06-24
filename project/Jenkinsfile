@@ -17,13 +17,6 @@ pipeline {
                 script{
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
-                        echo "TEEEEEEEEEEST5"
-                        echo "${env.GIT_TAG_MESSAGE}"
-                        echo "${env.GIT_TAG_NAME}"
-                        sh(returnStdout: true, script: "git tag --contains").trim()
-                        echo "222222222222222222"
-                        sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
-                        echo "333333333333333333"
                         git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
                         sh 'git fetch'
                         gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()

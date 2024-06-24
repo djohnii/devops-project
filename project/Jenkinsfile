@@ -8,6 +8,8 @@ pipeline {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
+        env.GIT_TAG_NAME = gitTagName()
+        env.GIT_TAG_MESSAGE = gitTagMessage()
     }
     stages {
         stage('build docker image'){
@@ -16,6 +18,8 @@ pipeline {
                     sh "mkdir -p git_branch"
                     dir('git_branch'){
                         echo "TEEEEEEEEEEST5"
+                        echo "${env.GIT_TAG_MESSAGE}"
+                        echo "${env.GIT_TAG_NAME}"
                         sh(returnStdout: true, script: "git tag --contains").trim()
                         echo "222222222222222222"
                         sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()

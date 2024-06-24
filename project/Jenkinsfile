@@ -13,8 +13,15 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    echo "get git tag1"
-                    echo "${GIT_TAG_NAME}"
+                    sh "mkdir -r git_branch"
+                    dir('git_branch'){
+                        echo "get git tag1"
+                        git branch: 'main', credentialsId: 'key2', url: 'https://github.com/djohnii/devops-project.git'
+                        sh 'git fetch'
+                        gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                        echo "gitTag output: ${gitTag}"
+                    }
+                    
                     // checkout scm
                     // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     // echo "gitTag output: ${gitTag}"

@@ -2,30 +2,8 @@ pipeline {
     agent {
         label "agent-1"
     } 
-    triggers {
-       
-    GenericTrigger(
-    genericVariables: [
-    [key: 'ref', value: '$.ref']
-    ],
-    withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) { 
-        causeString: 'Triggered on $ref',
+    
 
-        token: jenkinstoken,
-        tokenCredentialId: '',
-
-        printContributedVariables: true,
-        printPostContent: true,
-
-        silentResponse: false,
-        
-        shouldNotFlatten: false,
-
-        regexpFilterText: '$ref',
-        regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
-    )
-    }
-  }
     environment {
         // env.GIT_TAG_NAME = gitTagName()
         // env.GIT_TAG_MESSAGE = gitTagMessage()
@@ -35,11 +13,49 @@ pipeline {
         gitTag = ''
         
     }
-    stages {
-        stage('build docker image2'){
-            steps{
-                script{
-                    sh "echo $ref"
+  stages {
+    stage('Trigger') {
+      steps {
+        script {
+          withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
+            // Set up the webhook trigger
+            triggers {
+              GenericTrigger(
+               genericVariables: [
+                [key: 'ref', value: '$.ref']
+               ],
+
+               causeString: 'Triggered on $ref',
+
+               token: 'jenkinstoken',
+               tokenCredentialId: '',
+
+               printContributedVariables: true,
+               printPostContent: true,
+
+               silentResponse: false,
+               
+               shouldNotFlatten: false,
+
+               regexpFilterText: '$ref',
+               regexpFilterExpression: 'refs/heads/' + env.BRANCH_NAME
+              )
+            }
+          }
+        }
+      }
+    }
+
+    stage('Some step') {
+      steps {
+        script {
+          // Your stage steps here
+          sh "echo $ref"
+        }
+      }
+    }
+  }
+}
                     
                     // sh "mkdir -p git_branch"
                     // dir('git_branch'){
@@ -77,9 +93,6 @@ pipeline {
                         // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         // echo "gitTag output: ${gitTag}"
                     // }
-                }
-            }
-        }
         // stage('test build tag') {
         //     // when {
         //     //      tag "release-*"
@@ -105,5 +118,5 @@ pipeline {
         //         }
         //     }
         // }
-    }
-}
+
+

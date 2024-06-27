@@ -15,11 +15,11 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    withCredentials([gitUsernamePassword(credentialsId: 'f37ac8f5-44e4-471d-9fe0-5ce794c713bf', gitToolName: 'Default')]) {
+                    withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
                         properties([
                         pipelineTriggers([
                         [$class: 'GenericTrigger',
-                            token: env.JOB_NAME + credentialsId,
+                            token: jenkinstoken
                         ]
                         ])
                         ])

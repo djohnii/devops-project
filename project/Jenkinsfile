@@ -18,7 +18,7 @@ pipeline {
                 [key: 'ref', value: '$.ref']
             ],
             WithCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
-                token: jenkinstoken,
+                token: jenkinstoken ,
                 causeString: 'Triggered on $ref',
 
      

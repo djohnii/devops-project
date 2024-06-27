@@ -15,14 +15,23 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    sh "mkdir -p git_branch"
-                    dir('git_branch'){
-                        git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
-                        TAG = sh (
-                            returnStdout: true,
-                            script: 'git fetch --tags && git tag --points-at HEAD | awk NF'
-                            ).trim()
-                        echo "${TAG}"
+                    withCredentials([string(credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', variable: 'credentialsVariable', url: 'https://github.com/djohnii/devops-project.git')]) {
+                        properties([
+                        pipelineTriggers([
+                        [$class: 'GenericTrigger',
+                            token: env.JOB_NAME + credentialsVariable,
+                        ]
+                        ])
+                        ])
+                        }
+                    // sh "mkdir -p git_branch"
+                    // dir('git_branch'){
+                    //     git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
+                    //     TAG = sh (
+                    //         returnStdout: true,
+                    //         script: 'git fetch --tags && git tag --points-at HEAD | awk NF'
+                    //         ).trim()
+                    //     echo "${TAG}"
 
 
                         // checkout scm
@@ -50,7 +59,7 @@ pipeline {
                         // sh 'git fetch'
                         // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         // echo "gitTag output: ${gitTag}"
-                    }
+                    // }
                 }
             }
         }

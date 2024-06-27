@@ -15,7 +15,7 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', variable: 'credentialsVariable', url: 'https://github.com/djohnii/devops-project.git')]) {
+                    withCredentials([string(credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', variable: 'credentialsVariable')]) {
                         properties([
                         pipelineTriggers([
                         [$class: 'GenericTrigger',

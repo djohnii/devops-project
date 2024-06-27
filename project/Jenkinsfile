@@ -36,7 +36,7 @@ pipeline {
         
     }
     stages {
-        stage('build docker image'){
+        stage('build docker image2'){
             steps{
                 script{
                     sh "echo $ref"

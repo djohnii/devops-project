@@ -39,15 +39,8 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
-                        properties([
-                        pipelineTriggers([
-                        [$class: 'GenericTrigger',
-                            token: jenkinstoken
-                        ]
-                        ])
-                        ])
-                        }
+                    sh "echo $ref"
+                    
                     // sh "mkdir -p git_branch"
                     // dir('git_branch'){
                     //     git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'

@@ -1,17 +1,4 @@
-node {
- WithCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
- properties([
-  pipelineTriggers([
-   [$class: 'GenericTrigger',
-    [key: 'ref', value: '$.ref'],
 
-    token: jenkinstoken,
-
-   ]
-  ])
- ])
-}
-}
 
 
 pipeline {
@@ -27,17 +14,45 @@ pipeline {
         gitTag = ''
         
     }
-  stages {
-    stage('Some step') {
-      steps {
-        script {
-          // Your stage steps here
-          sh "echo $ref"
-        }
-      }
-    }
+    triggers {
+        GenericTrigger(
+            genericVariables: [
+                [key: 'ref', value: '$.ref']
+            ],
+            WithCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
+                token: 'abc123',
+                causeString: 'Triggered on $ref',
+
+     
+                tokenCredentialId: '',
+
+                printContributedVariables: true,
+                printPostContent: true,
+
+                silentResponse: false,
+                
+                shouldNotFlatten: false,
+
+                regexpFilterText: '$ref',
+                regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
+            }
+     
+    
+
+    )
   }
-}
+
+    stages {
+        stage('Some step') {
+        steps {
+            script {
+            // Your stage steps here
+            sh "echo $ref"
+            }
+        }
+        }
+    }
+    }
                     
                     // sh "mkdir -p git_branch"
                     // dir('git_branch'){

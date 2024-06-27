@@ -3,12 +3,12 @@ pipeline {
         label "agent-1"
     } 
     triggers {
-    withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {    
-        GenericTrigger(
-        genericVariables: [
-        [key: 'ref', value: '$.ref']
-        ],
-
+       
+    GenericTrigger(
+    genericVariables: [
+    [key: 'ref', value: '$.ref']
+    ],
+    withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) { 
         causeString: 'Triggered on $ref',
 
         token: jenkinstoken,
@@ -23,7 +23,7 @@ pipeline {
 
         regexpFilterText: '$ref',
         regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
-        )
+    )
     }
   }
     environment {

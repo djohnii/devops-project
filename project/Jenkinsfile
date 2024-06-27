@@ -15,7 +15,7 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', variable: 'credentialsVariable')]) {
+                    withCredentials([gitUsernamePassword(credentialsId: 'f37ac8f5-44e4-471d-9fe0-5ce794c713bf', variable: 'credentialsVariable', gitToolName: 'Default')]) {
                         properties([
                         pipelineTriggers([
                         [$class: 'GenericTrigger',

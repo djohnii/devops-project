@@ -1,9 +1,23 @@
+node {
+ WithCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
+ properties([
+  pipelineTriggers([
+   [$class: 'GenericTrigger',
+    [key: 'ref', value: '$.ref'],
+
+    token: jenkinstoken,
+
+   ]
+  ])
+ ])
+}
+}
+
+
 pipeline {
     agent {
         label "agent-1"
     } 
-    
-
     environment {
         // env.GIT_TAG_NAME = gitTagName()
         // env.GIT_TAG_MESSAGE = gitTagMessage()
@@ -14,40 +28,6 @@ pipeline {
         
     }
   stages {
-    stage('Trigger') {
-      steps {
-        script {
-          withCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
-            // Set up the webhook trigger
-            script {
-              def ref = ''
-              // Use an input step to capture the ref value
-              input message: 'Please enter the git ref', parameters: [string(defaultValue: 'refs/heads/main', description: 'git ref', name: 'Ref')]
-
-              // Retrieve the ref value from the input
-              ref = env.Ref
-
-              // Configure the Generic Webhook Trigger
-              def trigger = [
-                $class: 'GenericTrigger',
-                genericVariables: [[key: 'ref', value: '$.ref']],
-                causeString: "Triggered on $ref",
-                printContributedVariables: true,
-                printPostContent: true,
-                regexpFilterText: "$ref",
-                regexpFilterExpression: "refs/heads/" + env.BRANCH_NAME,
-                token: "jenkinstoken",
-                tokenCredentialId: "",
-                silentResponse: false,
-                shouldNotFlatten: false,
-              ]
-              currentBuild.rawBuild.getActions().add(trigger)
-            }
-          }
-        }
-      }
-    }
-
     stage('Some step') {
       steps {
         script {

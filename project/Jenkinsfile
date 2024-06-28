@@ -12,14 +12,30 @@ pipeline {
         gitTag = ''
         
     }
+//     triggers {
+//         GenericTrigger(
+//             genericVariables: [
+//                 [key: 'tagString',
+//                  value: '$.ref',
+//                  expressionType: 'JSONPath']
+//             ],
+//             token: '',
+//             printContributedVariables: true,
+//             printPostContent: true,
+//             // only trigger if tag follows Major.Minor.Patch regex
+//             regexpFilterText: '$tagString',
+//             regexpFilterExpression: '<tag-regex-here>'
+//         )
+// }
     
     stages {
         stage('Some step') {
         steps {
             script {
             // Your stage steps here
-            echo "${tagString}"
+
             // sh "echo $ref"
+            echo "${tagString}"
             }
         }
         }

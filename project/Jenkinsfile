@@ -12,40 +12,13 @@ pipeline {
         gitTag = ''
         
     }
-    triggers {
-        GenericTrigger(
-            genericVariables: [
-                [key: 'ref', value: '$.ref']
-            ],
-            WithCredentials([string(credentialsId: 'githubtoken', variable: 'jenkinstoken')]) {
-                token: ${jenkinstoken}
-            }
-                 
-            causeString: 'Triggered on $ref',
-
     
-            tokenCredentialId: '',
-
-            printContributedVariables: true,
-            printPostContent: true,
-
-            silentResponse: false,
-            
-            shouldNotFlatten: false,
-
-            regexpFilterText: '$ref',
-            regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
-     
-    
-
-    )
-  }
-
     stages {
         stage('Some step') {
         steps {
             script {
             // Your stage steps here
+            echo tagString
             sh "echo $ref"
             }
         }

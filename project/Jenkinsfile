@@ -18,8 +18,8 @@ pipeline {
         steps {
             script {
             // Your stage steps here
-            echo tagString
-            sh "echo $ref"
+            echo "${tagString}"
+            // sh "echo $ref"
             }
         }
         }

@@ -56,7 +56,7 @@ pipeline {
             // Your stage steps here
 
             // sh "echo $ref"
-            echo "this is : ${ref}"
+            echo "this isss : ${ref}"
             }
         }
         }

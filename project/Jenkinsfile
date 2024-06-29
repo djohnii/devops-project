@@ -3,27 +3,27 @@ pipeline {
     agent {
         label "agent-1"
     } 
-    triggers {
-        GenericTrigger(
-        genericVariables: [
-        [key: 'ref', value: '$.ref']
-        ],
+    // triggers {
+    //     GenericTrigger(
+    //     genericVariables: [
+    //     [key: 'ref', value: '$.ref']
+    //     ],
 
-        causeString: 'Triggered on $ref',
+    //     causeString: 'Triggered on $ref',
 
-        // token: 'abc123',
-        tokenCredentialId: '',
+    //     // token: 'abc123',
+    //     tokenCredentialId: '',
 
-        printContributedVariables: true,
-        printPostContent: true,
+    //     printContributedVariables: true,
+    //     printPostContent: true,
 
-        silentResponse: false,
+    //     silentResponse: false,
         
-        shouldNotFlatten: false,
+    //     shouldNotFlatten: false,
 
-        regexpFilterText: '$ref',
-        )
-    }
+    //     regexpFilterText: '$ref',
+    //     )
+    // }
     environment {
         // env.GIT_TAG_NAME = gitTagName()
         // env.GIT_TAG_MESSAGE = gitTagMessage()
@@ -56,7 +56,7 @@ pipeline {
             // Your stage steps here
 
             // sh "echo $ref"
-            echo "this isss : ${ref}"
+            echo "this isss : ${env.GIT_TAG_NAME}"
             }
         }
         }

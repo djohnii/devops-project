@@ -4,15 +4,26 @@ pipeline {
         label "agent-1"
     } 
     triggers {
-    GenericTrigger(
-        genericVariables:[
-            [key: 'ref', value: '$.ref']
+        GenericTrigger(
+        genericVariables: [
+        [key: 'ref', value: '$.ref']
         ],
-        // token:'secret',
+
         causeString: 'Triggered on $ref',
-        printContri butedVariables: true,
-        printPostContent: true
-    )
+
+        // token: 'abc123',
+        tokenCredentialId: '',
+
+        printContributedVariables: true,
+        printPostContent: true,
+
+        silentResponse: false,
+        
+        shouldNotFlatten: false,
+
+        regexpFilterText: '$ref',
+        regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
+        )
     }
     environment {
         // env.GIT_TAG_NAME = gitTagName()

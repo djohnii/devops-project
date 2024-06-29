@@ -56,7 +56,18 @@ pipeline {
             // Your stage steps here
 
             // sh "echo $ref"
-            echo "this isss : ${env.GIT_TAG_NAME}"
+            def scmVars = checkout([
+                $class: 'GitSCM'
+            ])
+
+            // Display the variable using scmVars
+            echo "scmVars.GIT_COMMIT"
+            echo "${scmVars.GIT_COMMIT}"
+
+            // Displaying the variables saving it as environment variable
+            env.GIT_COMMIT = scmVars.GIT_COMMIT
+            echo "env.GIT_COMMIT"
+            echo "${env.GIT_COMMIT}"
             }
         }
         }

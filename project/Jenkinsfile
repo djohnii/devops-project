@@ -22,7 +22,6 @@ pipeline {
         shouldNotFlatten: false,
 
         regexpFilterText: '$ref',
-        regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
         )
     }
     environment {

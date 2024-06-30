@@ -4,9 +4,17 @@ pipeline {
         label "agent-1"
     } 
     parameters{
-        gitParameter name: 'TAG',
-                     type: 'PT_TAG',
-                     defaultValue: 'master'
+        gitParameter  ( name: 'TAG',
+                        type: 'PT_TAG',
+                        branch: '',
+                        branchFilter: '.*',
+                        defaultValue: '',
+                        describtion: '',
+                        quickFilterEnabled: true,
+                        selectedValue: 'NONE',
+                        sortMode: 'NONE',
+                        tagFilter: '*',
+                        useRepository: 'git@github.com:djohnii/devops-project.git' )
                      
     }
 
@@ -25,7 +33,7 @@ pipeline {
                           extensions: [],
                           gitTool: 'Default',
                           submoduleCfg: [],
-                          userRemoteConfigs: [[url: 'git@github.com:djohnii/devops-project.git']]
+                          userRemoteConfigs: [[url: 'git@github.com:djohnii/devops-project.git', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116']]
                         ])
             }
         }
@@ -35,6 +43,7 @@ pipeline {
 
             steps {
                 script {
+                    
                     sh "this is tag:  $TAG"
             // Your stage steps here
 

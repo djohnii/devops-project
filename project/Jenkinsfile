@@ -3,76 +3,46 @@ pipeline {
     agent {
         label "agent-1"
     } 
-    // triggers {
-    //     GenericTrigger(
-    //     genericVariables: [
-    //     [key: 'ref', value: '$.ref']
-    //     ],
+    parameters{
+        gitParameter name: 'TAG',
+                     type: 'PT_TAG',
+                     defaultValue: 'master'
+                     
+    }
 
-    //     causeString: 'Triggered on $ref',
-
-    //     // token: 'abc123',
-    //     tokenCredentialId: '',
-
-    //     printContributedVariables: true,
-    //     printPostContent: true,
-
-    //     silentResponse: false,
-        
-    //     shouldNotFlatten: false,
-
-    //     regexpFilterText: '$ref',
-    //     )
-    // }
     environment {
-        // env.GIT_TAG_NAME = gitTagName()
-        // env.GIT_TAG_MESSAGE = gitTagMessage()
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        gitTag = ''
-        
+        gitTag = '' 
     }
-//     triggers {
-//         GenericTrigger(
-//             genericVariables: [
-//                 [key: 'tagString',
-//                  value: '$.ref',
-//                  expressionType: 'JSONPath']
-//             ],
-//             token: '',
-//             printContributedVariables: true,
-//             printPostContent: true,
-//             // only trigger if tag follows Major.Minor.Patch regex
-//             regexpFilterText: '$tagString',
-//             regexpFilterExpression: '<tag-regex-here>'
-//         )
-// }
-    
     stages {
-        stage('Some step') {
-        steps {
-            script {
-            // Your stage steps here
-
-            // sh "echo $ref"
-            def scmVars = checkout([
-                $class: 'GitSCM'
-            ])
-
-            // Display the variable using scmVars
-            echo "scmVars.GIT_COMMIT"
-            echo "${scmVars.GIT_COMMIT}"
-
-            // Displaying the variables saving it as environment variable
-            env.GIT_COMMIT = scmVars.GIT_COMMIT
-            echo "env.GIT_COMMIT"
-            echo "${env.GIT_COMMIT}"
+        stage('Example') {
+            steps {
+                checkout([$class: 'GitSCM',
+                          branches: [[name: "${params.TAG}"]],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [],
+                          gitTool: 'Default',
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[url: 'git@github.com:djohnii/devops-project.git']]
+                        ])
             }
         }
+    
+
+        stage('Some step') {
+
+            steps {
+                script {
+                    sh "this is tag: $TAG"
+            // Your stage steps here
+
+                }
+            }
         }
     }
-    }
+}
                     
                     // sh "mkdir -p git_branch"
                     // dir('git_branch'){

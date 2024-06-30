@@ -9,7 +9,7 @@ pipeline {
                         branch: '',
                         branchFilter: '.*',
                         defaultValue: '',
-                        describtion: '',
+                        description: '',
                         quickFilterEnabled: true,
                         selectedValue: 'NONE',
                         sortMode: 'NONE',

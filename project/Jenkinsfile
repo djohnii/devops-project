@@ -1,5 +1,5 @@
 node {
-    git url: 'https://github.com/jenkinsci/git-tag-message-plugin'
+    git url: 'https://github.com/djohnii/devops-project'
     env.GIT_TAG_NAME = gitTagName()
     env.GIT_TAG_MESSAGE = gitTagMessage()
 }

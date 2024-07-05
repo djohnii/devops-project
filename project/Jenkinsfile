@@ -13,13 +13,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                script{
+                    
+                    if  (env.taglatest != env.penultimate) {
+                        echo " не совпадают т.е. версия latest"
+                    }
+                    else {
+                        echo "Совпадают те версия ${env.taglatest}"
+                    }
 
-                if  (env.taglatest != env.penultimate) {
-                    echo " не совпадают т.е. версия latest"
-                }
-                else {
-                    echo "Совпадают те версия ${env.taglatest}"
-                }
+                    }
+
+
             }
         }
 

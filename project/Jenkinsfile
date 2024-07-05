@@ -14,24 +14,16 @@ pipeline {
         stage('Build') {
             steps {
 
-                sh "mkdir -p git_branch"
-                dir('git_branch'){
-                    // git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
-                    if  (env.taglatest != env.penultimate) {
-                        echo "не совпадают т.е. версия latest"
-                    }
-                    else {
-                        echo "Совпадают те версия ${env.taglatest}"
-                    }
+                if  (env.taglatest != env.penultimate) {
+                    echo "не совпадают т.е. версия latest"
                 }
-
-                checkout scm
-
-                echo "tag latest is: ${taglatest} and tag penultimate is: ${penultimate}"
-                sh "git describe --tags --abbrev=0 HEAD"
-
+                else {
+                    echo "Совпадают те версия ${env.taglatest}"
+                }
             }
         }
+
+
 
 
     }

@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 checkout scm
-                echo "test1"
+                echo "test2"
                 sh "git describe --tags --abbrev=0 HEAD"
             }
         }

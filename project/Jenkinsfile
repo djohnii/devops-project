@@ -47,7 +47,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "${name}"
+                echo "${GIT_TAG_NAME}"
             }
         }
 

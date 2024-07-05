@@ -10,7 +10,9 @@ pipeline {
         stage('Build') {
             steps {
                 checkout scm
-                echo "test3"
+                def taglatest = sh "git describe $(git rev-parse @) --tags --abbrev=0"
+                def penultimate = sh "git describe $(git rev-parse @~) --tags --abbrev=0"
+                echo "tag latest is: ${taglatest} and tag penultimate is: ${penultimate}"
                 sh "git describe --tags --abbrev=0 HEAD"
             }
         }

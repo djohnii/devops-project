@@ -6,12 +6,15 @@ pipeline {
     agent {
         label "agent-1"
     } 
+    environment {
+        taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
+        penultimate = sh(script: 'git describe $(git rev-parse @~) --tags --abbrev=0', returnStdout: true).trim()
+    }
     stages {
         stage('Build') {
             steps {
                 checkout scm
-                def taglatest = sh "git describe $(git rev-parse @) --tags --abbrev=0"
-                def penultimate = sh "git describe $(git rev-parse @~) --tags --abbrev=0"
+
                 echo "tag latest is: ${taglatest} and tag penultimate is: ${penultimate}"
                 sh "git describe --tags --abbrev=0 HEAD"
             }

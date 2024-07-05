@@ -1,0 +1,108 @@
+
+pipeline {
+    agent {
+        label "agent-1"
+    } 
+  triggers {
+    GenericTrigger(
+      genericVariables: [
+        [key: 'ref', value: '$.ref']
+      ],
+
+      causeString: 'Triggered on $ref',
+
+
+      tokenCredentialId: '',
+
+      printContributedVariables: true,
+      printPostContent: true,
+
+      silentResponse: false,
+
+      shouldNotFlatten: false,
+
+      regexpFilterText: '$ref',
+      regexpFilterExpression: 'refs/heads/' + BRANCH_NAME
+    )
+  }
+    environment {
+        registry = "alwx1753/devops-project"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+        gitTag = '' 
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "tags: ${ref}"
+                }
+
+            }
+        }
+    }
+}
+                    
+                    // sh "mkdir -p git_branch"
+                    // dir('git_branch'){
+                    //     git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
+                    //     TAG = sh (
+                    //         returnStdout: true,
+                    //         script: 'git fetch --tags && git tag --points-at HEAD | awk NF'
+                    //         ).trim()
+                    //     echo "${TAG}"
+
+
+                        // checkout scm
+                        // def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)
+                        // if (gitTag == 0) {
+                        //     env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        // } else {
+                        //     env.GIT_TAG = "No tag found"
+                        // }
+                        // echo "Current tag: ${env.GIT_TAG}"
+
+
+
+
+                        // env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        // env.GIT_TAG_MESSAGE = sh(script: "git tag -n10000 -l ${env.GIT_TAG}", returnStdout: true).trim()
+                        // def gitTag = sh(script: 'git describe --tags --exact-match 2>/dev/null', returnStatus: true)
+                        // if (gitTag == 0) {
+                        //     env.GIT_TAG = sh(script: 'git describe --tags --abbrev=0', returnStdout: true).trim()
+                        // } else {
+                        //     env.GIT_TAG = "No tag found"
+                        // }
+                        // echo "Current tag: ${env.GIT_TAG}"
+                        // git branch: 'main', credentialsId: '2009ea58-5299-4880-ac2d-d125a1281116', url: 'https://github.com/djohnii/devops-project.git'
+                        // sh 'git fetch'
+                        // gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                        // echo "gitTag output: ${gitTag}"
+                    // }
+        // stage('test build tag') {
+        //     // when {
+        //     //      tag "release-*"
+        //     // }
+        //     steps{
+        //         script{
+        //             echo "test tag work12"
+        //             docker.withRegistry( '', registryCredential ) {
+        //                 dockerImage.push("${gitTag}")
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('deploy to k8s'){
+        //     steps{
+        //         script{
+        //             echo "deploy to k8s"
+        //             dir('project/k8s'){
+        //                 kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
+        //                     sh 'kubectl apply -f myapp.yml ingress.yml -n jenkins'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+

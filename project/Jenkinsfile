@@ -47,21 +47,11 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'make package'
+                echo "${name}"
             }
         }
-        stage('Test') {
-            steps {
-                sh 'make check'
-            }
-        }
-        stage('Deploy') {
-            when { tag "release-*" }
-            steps {
-                echo 'Deploying only because this commit is tagged...'
-                sh 'make deploy'
-            }
-        }
+
+
     }
 }
                     

@@ -16,7 +16,7 @@ pipeline {
                 script{
                     
                     if  (env.taglatest != env.penultimate) {
-                        echo " не совпадают т.е. версия latest"
+                        echo "не совпадают т.е. версия latest"
                     }
                     else {
                         echo "Совпадают те версия ${env.taglatest}"

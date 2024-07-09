@@ -28,22 +28,91 @@ terraform apply --auto-approve
 ```
 yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
 ```
+
+Чтобы не вводить эту команду каждый раз вручную я коде terraform добавил блок с флагом --force для перезаписи кониг файла.(можно вывести конфиг командой ``kubectl config view``)
+
+```
+resource "null_resource" "kubectl" {
+    provisioner "local-exec" {
+        command = "yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.regional_cluster.id} --external --force"
+    }
+}
+```
+
 ### Настраиваем кластер k8s для работы jenkins
 
 Ссылка руководства установки  [Jenkins в кластер kubernetes](https://www.jenkins.io/doc/book/installing/kubernetes/)
 - создаем новую область для работы jenkins
   ```
-  -kubectl create namespace jenkins
+  -kubectl create namespace devops-tools
+
   ```
-- создаем пользователя и токен ключ для работы jenkins 
-  ```
-  kubectl create sa jenkins -n jenkins
-  kubectl create token jenkins -n jenkins --duration=8760h
-- добавляем роль 
-  ```
-  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
-  ```
-Теперь можно вывести конфиг командой ``kubectl config view``
+ - создаем сервисный аккаунт [service.yaml](./project/k8s/jenkins/serviceaccount.yaml)
+ - создаем диск [volume.yaml](./project/k8s/jenkins/volume.yaml)
+
+так как диск я создаю на хосте, необходимо указать ноду . Для этого в файле [volume.yaml](./project/k8s/jenkins/volume.yaml) меняем значения ``values: - Имя_НОДЫ`` на имя любой ноды. Для просмотра нод можно использовать команду ``kubectl get node``
+
+```
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ИМЯ_НОДЫ
+```
+ 
+- создаем [deployment.yaml](./project/k8s/jenkins/deployment.yaml)
+- создаем [service.yaml](./project/k8s/jenkins/service.yaml)
+- создаем [ingress.yaml](./project/k8s/jenkins/ingress.yaml)
+
+- теперь можно выполнить деплой указав папку ка файлам
+
+```
+kubectl apply -f ./project/k8s/jenkins/
+```
+
+- Далее устанавливаю ingress-nginx для доступа в jenkins 
+
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update && helm install ingress-nginx ingress-nginx/ingress-nginx 
+```
+### Настройка мониторинга в кластере kubernetes
+
+Создадим новую область для веб приложения и мониторинга
+
+```
+kubectl create namespace monitoring
+kubectl get namespace
+```
+
+Для создания мониторинга возьмем helm чарт
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install stable prometheus-community/kube-prometheus-stack --namespace=monitoring
+kubectl apply -f ingress.yml -n monitoring
+kubectl --namespace monitoring get pods -l "release=stable"
+```
+
+
+Для доступа с другой машины необходимо прописать в файле hosts:
+
+```
+
+192.168.27.242 app.test.com
+192.168.27.242 grafana.domen.ru
+```
+
+а так же логин и пароль для графана
+
+```
+UserName: admin Password: prom-operator
+```
+![image](https://github.com/djohnii/devops-project/assets/91311426/93c743c6-ad1c-4b72-8915-4436564e19ee)
+![image](https://github.com/djohnii/devops-project/assets/91311426/6ab63bfd-7114-42f5-84f6-8d0ef0dc0878)
+
 ## Github
 - Создал [GitHub](https://github.com/djohnii/devops-project) репозиторий 
 - Настроил webhooks в [github](https://github.com/djohnii/devops-project/settings/hooks)
@@ -60,14 +129,14 @@ yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --extern
 - выполняю команду  ``git add --all && git commit -m "test kube" && git push``
 - jenkins автоматически запускает pipeline
   ![alt text](image-2.png)
-- выполняю команду  ``git tag mytesttag $$ git push --tags``  и снова ``git push``
+- выполняю команду  ``git tag mytesttag $$ git push origin main --tags`` 
 - проверяем сборку в [dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
   ![alt text](image-3.png)
 
 ![alt text](image-4.png)
 
 
-# Решение2: Docker, Gitlub , Gitlab CI, ansible kuberspay
+# Решение2: Docker, Gitlub , Gitlab CI, ansible kuberspay (не актуально)
 ##  Docker
 репозиторий: https://hub.docker.com/repository/docker/alwx1753/devops-project/general
 

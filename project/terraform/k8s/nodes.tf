@@ -12,13 +12,13 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
       subnet_ids         = [yandex_vpc_subnet.dev_public_a.id]
     }
     resources {
-      memory = 2
+      memory = 4
       cores  = 2
     }
 
     boot_disk {
       type = "network-hdd"
-      size = 35
+      size = 40
     }
 
     scheduling_policy {
@@ -74,13 +74,13 @@ resource "yandex_kubernetes_node_group" "my_node_group-b" {
       subnet_ids         = [yandex_vpc_subnet.dev_public_b.id]
     }
     resources {
-      memory = 2
+      memory = 4
       cores  = 2
     }
 
     boot_disk {
       type = "network-hdd"
-      size = 35
+      size = 40
     }
 
     scheduling_policy {
@@ -94,7 +94,7 @@ resource "yandex_kubernetes_node_group" "my_node_group-b" {
 
   scale_policy {
     fixed_scale {
-      size = 2
+      size = 1
     }
   }
 
@@ -137,13 +137,13 @@ resource "yandex_kubernetes_node_group" "my_node_group-d" {
       subnet_ids         = [yandex_vpc_subnet.dev_public_d.id]
     }
     resources {
-      memory = 2
+      memory = 4
       cores  = 2
     }
 
     boot_disk {
       type = "network-hdd"
-      size = 35
+      size = 50
     }
 
     scheduling_policy {
@@ -193,7 +193,7 @@ resource "yandex_kubernetes_node_group" "my_node_group-d" {
 # }
 resource "null_resource" "kubectl" {
     provisioner "local-exec" {
-        command = "yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.regional_cluster.id} --external"
+        command = "yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.regional_cluster.id} --external --force"
     }
 }
 

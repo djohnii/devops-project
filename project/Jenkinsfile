@@ -33,14 +33,17 @@ pipeline {
         stage('deploy image') {
             steps{
                 script{
+                    latest_docker_image = sh "docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1"
                     if  (env.taglatest != env.penultimate) {
-                        sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp/myapp.yml"
+                        sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"
+                        // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push("${gitTag}")
                         }
                     }
                     else {
-                        sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
+                        sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"                       
+                        // sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push("latest")
                         }
@@ -53,6 +56,7 @@ pipeline {
             steps{
                 script{
                     dir('project/k8s/myapp'){
+                        sh "cat ./myapp.yml"
                         // kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
                             // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp.yml"
                         sh 'kubectl get pod -n jenkins'

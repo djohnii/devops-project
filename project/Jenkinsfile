@@ -34,13 +34,13 @@ pipeline {
             steps{
                 script{
                     if  (env.taglatest != env.penultimate) {
-                        sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp.yml"
+                        sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push("${gitTag}")
                         }
                     }
                     else {
-                        sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp.yml"
+                        sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push("latest")
                         }

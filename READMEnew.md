@@ -19,6 +19,22 @@
 - `Git` Github
 
 ##  k8s_yandex_cloud
+В данном решении используется service account для terraform. Для этого создал учетную запись и сгенерировал токен в json файл используя команду 
+
+```
+yc iam key create  --service-account-id <account_id> --folder-id <folder_id> --output key.json
+
+```
+
+
+Далее задаю конфигурацию профиля
+
+```
+export YC_TOKEN=$(yc iam create-token)
+export YC_CLOUD_ID=$(yc config get cloud-id)
+export YC_FOLDER_ID=$(yc config get folder-id)
+```
+
 Создаю кластер kubernetes и  узлы используя [terraform](./project/terraform/k8s/)
 ```
 terraform init
@@ -29,7 +45,7 @@ terraform apply --auto-approve
 yc managed-kubernetes cluster get-credentials --id catca7qm6373qprq6ik4 --external
 ```
 
-Чтобы не вводить эту команду каждый раз вручную я коде terraform добавил блок с флагом --force для перезаписи кониг файла.(можно вывести конфиг командой ``kubectl config view``)
+Чтобы не вводить эту команду каждый раз вручную , в коде terraform добавил блок с флагом --force для перезаписи кониг файла.(можно вывести конфиг командой ``kubectl config view``)
 
 ```
 resource "null_resource" "kubectl" {
@@ -124,6 +140,12 @@ UserName: admin Password: prom-operator
 - Создал [GitHub](https://github.com/djohnii/devops-project) репозиторий 
 - Настроил webhooks в [github](https://github.com/djohnii/devops-project/settings/hooks)
   ![alt text](image.png)
+
+
+
+
+
+
 ## Jenkins
 - Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
 - установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)

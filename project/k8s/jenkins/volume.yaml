@@ -29,7 +29,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - cl196lrlj13k61kf3033-etaj
+          - cl1hk2k65d21scdin2fs-ejas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

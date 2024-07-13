@@ -44,7 +44,7 @@ resource "null_resource" "kubectl" {
 Ссылка руководства установки  [Jenkins в кластер kubernetes](https://www.jenkins.io/doc/book/installing/kubernetes/)
 - создаем новую область для работы jenkins
   ```
-  -kubectl create namespace devops-tools
+  kubectl create namespace devops-tools
 
   ```
  - создаем сервисный аккаунт [service.yaml](./project/k8s/jenkins/serviceaccount.yaml)
@@ -78,6 +78,13 @@ kubectl apply -f ./project/k8s/jenkins/
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update && helm install ingress-nginx ingress-nginx/ingress-nginx 
 ```
+
+Для вывода токена jenkins использовать следующую команду
+
+```
+kubectl logs jenkins-56b6774bb6-5nfv8 -n devops-tools
+```
+
 ### Настройка мониторинга в кластере kubernetes
 
 Создадим новую область для веб приложения и мониторинга

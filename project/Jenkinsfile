@@ -42,7 +42,6 @@ pipeline {
                         }
                     }
                     else {
-                        echo "run else deploy image"
                         sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"                       
                         // sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {

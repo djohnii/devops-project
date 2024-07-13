@@ -7,7 +7,7 @@ pipeline {
         registryCredential = 'dockerhub'
         dockerImage = ''
         taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
-        penultimate = sh(script: 'git describe $(git rev-parse @~) --tags --abbrev=0', returnStdout: true).trim()
+        penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
     }
     stages {
         stage('build docker image'){

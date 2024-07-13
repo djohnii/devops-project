@@ -42,7 +42,7 @@ pipeline {
                     else {
                         sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp.yml"
                         docker.withRegistry( '', registryCredential ) {
-                            ockerImage.push("latest")
+                            dockerImage.push("latest")
                         }
                     }
                 }

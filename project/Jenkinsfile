@@ -52,11 +52,11 @@ pipeline {
         stage('deploy to k8s'){
             steps{
                 script{
-                    dir('project/k8s'){
+                    dir('project/k8s/myapp'){
                         // kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
                             // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp.yml"
                         sh 'kubectl get pod -n jenkins'
-                        sh 'kubectl apply -f myapp.yml -f ngress.yml -n jenkins'
+                        sh 'kubectl apply -f ./'
                         // }
 
                     }

@@ -33,7 +33,8 @@ pipeline {
         stage('deploy image') {
             steps{
                 script{
-                    latest_docker_image = sh "docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1"
+                    // latest_docker_image = sh "docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1"
+                    def latest_docker_image = sh(script: 'docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1', returnStdout: true).trim()
                     if  (env.taglatest != env.penultimate) {
                         sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"
                         // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp/myapp.yml"

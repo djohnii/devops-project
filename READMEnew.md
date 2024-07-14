@@ -117,6 +117,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install stable prometheus-community/kube-prometheus-stack --namespace=monitoring
 kubectl apply -f ingress.yml -n monitoring
 kubectl --namespace monitoring get pods -l "release=stable"
+kubectl edit svc stable-grafana -n monitoring
 ```
 
 

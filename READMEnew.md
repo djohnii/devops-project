@@ -119,15 +119,9 @@ kubectl apply -f ingress.yml -n monitoring
 kubectl --namespace monitoring get pods -l "release=stable"
 kubectl edit svc stable-grafana -n monitoring
 ```
+Последняя команда ``kubectl edit svc stable-grafana -n monitoring`` небходима для того, чтобы поменять тип балансировщика на ``LoadBalancer``
 
 
-Для доступа с другой машины необходимо прописать в файле hosts:
-
-```
-
-192.168.27.242 app.test.com
-192.168.27.242 grafana.domen.ru
-```
 
 а так же логин и пароль для графана
 
@@ -147,8 +141,8 @@ UserName: admin Password: prom-operator
 
 
 
-## Jenkins
-- Развернул виртуальную машину с белым ip чтобы работали webhooks в github.
+## Jenkins (Альтернативный способ)
+- Отдельно развернул виртуальную машину с белым ip.Установил jenkins используя данную инсрукцию https://www.jenkins.io/doc/book/installing/linux/.Настроил webhooks в github.
 - установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
 - настроил kubernetes cloud 
   ![alt text](image-1.png)

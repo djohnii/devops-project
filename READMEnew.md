@@ -142,7 +142,8 @@ UserName: admin Password: prom-operator
 
 
 ## Jenkins (Альтернативный способ)
-- Отдельно развернул виртуальную машину с белым ip.Установил jenkins используя данную инсрукцию https://www.jenkins.io/doc/book/installing/linux/.Настроил webhooks в github.
+
+- Отдельно развернул виртуальную машину с белым ip используя (terraform)[./project/terraform/jenkins_host].Установил jenkins используя данную инсрукцию https://www.jenkins.io/doc/book/installing/linux/.Настроил webhooks в github или еще проще используя (docker)[https://www.jenkins.io/doc/book/installing/docker/]
 - установил несколько плагинов: [kubernetes](https://plugins.jenkins.io/kubernetes-cli/),[docker](https://plugins.jenkins.io/docker-worcflow),[github](https://plugins.jenkins.io/github-api/) [Blue Ocean](https://plugins.jenkins.io/blueocean/)
 - настроил kubernetes cloud 
   ![alt text](image-1.png)
@@ -153,7 +154,7 @@ UserName: admin Password: prom-operator
 - выполняю команду  ``git add --all && git commit -m "test kube" && git push``
 - jenkins автоматически запускает pipeline
   ![alt text](image-2.png)
-- выполняю команду  ``git tag mytesttag $$ git push origin main --tags`` 
+- выполняю команду  ``git tag mytesttag && git push origin main --tags`` 
 - проверяем сборку в [dockerhub](https://hub.docker.com/repository/docker/alwx1753/devops-project/general)
   ![alt text](image-3.png)
 

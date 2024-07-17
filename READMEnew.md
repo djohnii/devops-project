@@ -149,6 +149,7 @@ UserName: admin Password: prom-operator
   ![alt text](image-1.png)
 - написал [jenkinsfile](./project/Jenkinsfile)
 
+
 Далее для теста выполняю следующее
 - редактирую любой файл в репозитории [GitHub](https://github.com/djohnii/devops-project)
 - выполняю команду  ``git add --all && git commit -m "test kube" && git push``

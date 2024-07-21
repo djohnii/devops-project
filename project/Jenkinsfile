@@ -7,26 +7,15 @@ pipeline {
         registryCredential = 'dockerhub'
         dockerImage = ''
         taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
-        penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
+        // penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
     }
     stages {
         stage('build docker image'){
             steps{
                 script{
-                    if  (env.taglatest != env.penultimate) {
-                        dir('project/docker'){
-                            dockerImage = docker.build registry + ":${taglatest}"
-                        }
-                        echo "не совпадают т.е. версия "
-                    }
-                    else {
-                        echo "Совпадают те версия latest"
                         dir('project/docker'){
                             dockerImage = docker.build registry + ":latest"
                         }
-                    }
-                    
-
                 }
             }
         }
@@ -34,19 +23,10 @@ pipeline {
             steps{
                 script{
                     def latest_docker_image = sh(script: 'docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1', returnStdout: true).trim()
-                    if  (env.taglatest != env.penultimate) {
-                        sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"
-                        // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp/myapp.yml"
-                        docker.withRegistry( '', registryCredential ) {
-                            dockerImage.push("${taglatest}")
-                        }
-                    }
-                    else {
-                        sh "sed -i 's|image:.*|image: ${latest_docker_image}|' project/k8s/myapp/myapp.yml"                       
+                    sh "sed -i 's|image:.*|image: latest|' project/k8s/myapp/myapp.yml"                       
                         // sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
-                        docker.withRegistry( '', registryCredential ) {
-                            dockerImage.push("latest")
-                        }
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push("latest")
                     }
                 }
             }

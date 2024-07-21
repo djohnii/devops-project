@@ -1,28 +1,54 @@
+// pipeline {
+//     agent {
+//         label "agent-1"
+//     } 
+//     environment {
+//         registry = "alwx1753/devops-project"
+//         registryCredential = 'dockerhub'
+//         dockerImage = ''
+//         // taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
+//         // penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
+//     }
+//     stages {
+//         stage('Checkout Source') {
+//             steps {
+//                 git branch: 'main', url: 'git@github.com:djohnii/devops-project.git'
+//             }
+//         }
+//         stage('Checkout tag') {
+//             steps{
+//                 script {
+//                     sh 'git fetch'
+//                     gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+//                     echo "gitTag output: ${gitTag}"
+//                 }
+//             }
+//         }
+//     }
+// }
+
+
+
+
+
+
+
+
+
 pipeline {
-    agent {
-        label "agent-1"
-    } 
+    agent any
     environment {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        // taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
-        // penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
     }
     stages {
-        stage('Checkout Source') {
-            steps {
-                git branch: 'main', url: 'git@github.com:djohnii/devops-project.git'
-            }
-        }
-        stage('Checkout tag') {
-            steps{
-                script {
-                    sh 'git fetch'
-                    gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-                    echo "gitTag output: ${gitTag}"
-                }
+        stage('Deploy') {
+            when { expression { sh([returnStdout: true, script: 'echo $TAG_NAME | tr -d \'\n\'']) } }
+                steps {
+                    echo 'Replace this with your actual deployment steps'
             }
         }
     }
+    
 }

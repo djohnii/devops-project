@@ -73,7 +73,9 @@ node('agent-1') {
     stage('deploy image') {
         script {
             sh "sed -i 's|image:.*|image: latest|' project/k8s/myapp/myapp.yml"
-            docker.withRegistry('', registryCredential) {
+
+            
+            docker.withRegistry(credentialsId: 'docker_cred') {
                 dockerImage.push("latest")
             }
         }

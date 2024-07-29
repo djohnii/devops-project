@@ -8,11 +8,6 @@ pipeline {
         dockerImage = ''
     }
     stages {
-        stage('Checkout Source') {
-            steps {
-                git branch: 'main', url: 'git@github.com:djohnii/devops-project.git'
-            }
-        }
         stage('Checkout tag') {
             steps{
                 script {
@@ -22,7 +17,7 @@ pipeline {
                     dir('project/docker'){
                     sh "pwd"
                     sh "ls -la"
-                        sh "docker build ${registry}:${gitTag}" .
+                    sh "docker build ${registry}:${gitTag}" .
                        // dockerImage = docker.build registry + ":${gitTag}"
                     }
                 }

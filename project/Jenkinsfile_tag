@@ -6,8 +6,6 @@ pipeline {
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        // taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
-        // penultimate = sh(script: 'git describe $(git rev-parse @~~) --tags --abbrev=0', returnStdout: true).trim()
     }
     stages {
         stage('Checkout Source') {
@@ -21,6 +19,18 @@ pipeline {
                     sh 'git fetch'
                     gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     echo "gitTag output: ${gitTag}"
+                    dir('project/docker'){
+                        dockerImage = docker.build registry + ":${gitTag}"
+                    }
+                }
+            }
+        }    
+        stage('Push docker image'){
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push("${gitTag}")
+                    }
                 }
             }
         }

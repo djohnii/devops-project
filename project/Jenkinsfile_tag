@@ -20,6 +20,8 @@ pipeline {
                     gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     echo "gitTag output: ${gitTag}"
                     dir('project/docker'){
+                    sh "pwd"
+                    sh "ls -la"
                         sh "docker build ${registry}:${gitTag}" .
                        // dockerImage = docker.build registry + ":${gitTag}"
                     }

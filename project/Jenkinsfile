@@ -69,6 +69,7 @@ node('agent-1') {
             }
         }
     }
+
     
     stage('deploy image') {
         script {

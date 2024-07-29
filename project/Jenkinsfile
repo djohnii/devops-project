@@ -85,23 +85,23 @@ node('agent-1') {
     }
 
     
-        stage('deploy to k8s') {
-        script {
-            try {
-                dir('project/k8s/myapp') {
-                    sh "cat ./myapp.yml"
-                    sh 'kubectl get pod -n jenkins'
-                    sh 'kubectl apply -f ./'
-                }
-            } catch (Exception e) {
-                // Handle the exception
-                echo "An error occurred during deployment to Kubernetes: ${e.message}"
-                // Optionally, you can fail the build
-                currentBuild.result = 'FAILURE'
-                error("Deployment failed: ${e.message}")
-            }
-        }
-    }
+    //     stage('deploy to k8s') {
+    //     script {
+    //         try {
+    //             dir('project/k8s/myapp') {
+    //                 sh "cat ./myapp.yml"
+    //                 sh 'kubectl get pod -n jenkins'
+    //                 sh 'kubectl apply -f ./'
+    //             }
+    //         } catch (Exception e) {
+    //             // Handle the exception
+    //             echo "An error occurred during deployment to Kubernetes: ${e.message}"
+    //             // Optionally, you can fail the build
+    //             currentBuild.result = 'FAILURE'
+    //             error("Deployment failed: ${e.message}")
+    //         }
+    //     }
+    // }
 }
 
 

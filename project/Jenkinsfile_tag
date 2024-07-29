@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout tag') {
             steps{
                 script {
-                    sh 'git fetch'
+                    //sh 'git fetch'
                     gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     echo "gitTag output: ${gitTag}"
                     dir('project/docker'){

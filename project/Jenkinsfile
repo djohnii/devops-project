@@ -61,7 +61,6 @@ node('agent-1') {
     def registry = "alwx1753/devops-project"
     def registryCredential = 'dockerhub'
     def dockerImage = ''
-    def taglatest = sh(script: 'git describe $(git rev-parse @) --tags --abbrev=0', returnStdout: true).trim()
 
     stage('build docker image') {
         script {
@@ -80,6 +79,26 @@ node('agent-1') {
         }
     }
 
+    
+        stage('deploy to k8s') {
+        script {
+            try {
+                dir('project/k8s/myapp') {
+                    sh "cat ./myapp.yml"
+                    sh 'kubectl get pod -n jenkins'
+                    sh 'kubectl apply -f ./'
+                }
+            } catch (Exception e) {
+                // Handle the exception
+                echo "An error occurred during deployment to Kubernetes: ${e.message}"
+                // Optionally, you can fail the build
+                currentBuild.result = 'FAILURE'
+                error("Deployment failed: ${e.message}")
+            }
+        }
+    }
+}
+
     // stage('deploy to k8s') {
     //     script {
     //         dir('project/k8s/myapp') {
@@ -89,4 +108,4 @@ node('agent-1') {
     //         }
     //     }
     // }
-}
+

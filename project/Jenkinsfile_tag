@@ -17,12 +17,12 @@ pipeline {
                     dir('project/docker'){
                     sh "pwd"
                     sh "ls -la"
-                    sh "docker build ${registry}:${gitTag}" .
-                       // dockerImage = docker.build registry + ":${gitTag}"
+                    sh "docker build ${registry}:${gitTag} ." 
+                    // dockerImage = docker.build registry + ":${gitTag}"
                     }
                 }
             }
-            
+
         }    
 
         stage('Push docker image'){

@@ -3,6 +3,7 @@ pipeline {
         label "agent-1"
     } 
     environment {
+        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
         registry = "alwx1753/devops-project"
         registryCredential = 'dockerhub'
         dockerImage = ''
@@ -26,8 +27,19 @@ pipeline {
         stage('Push docker image'){
             steps{
                 script {
-                    docker.withRegistry( '', registryCredential ) {
+                    docker.withRegistry(DOCKER_REGISTRY, 'docker_with_password') {
                         dockerImage.push("${gitTag}")
+                    }
+                }
+            }
+        }
+        stage('deploy to k8s'){
+            steps{
+                script{
+                    dir('project/k8s/myapp'){
+                        sh "sed -i 's|image:.*|image: alwx1753/devops-project:${gitTag}|' project/k8s/myapp/myapp.yml"
+                        sh "cat ./myapp.yml"
+                        sh 'kubectl apply -f ./'
                     }
                 }
             }

@@ -26,7 +26,7 @@ pipeline {
                     def latest_docker_image = sh(script: 'docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1', returnStdout: true).trim()
                     sh "sed -i 's|image:.*|image: latest|' project/k8s/myapp/myapp.yml"                       
                         // sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
-                    docker.withRegistry( '', registryCredential ) {
+                    docker.withRegistry(DOCKER_REGISTRY, 'docker_with_password') {
                         dockerImage.push("latest")
                     }
                 }

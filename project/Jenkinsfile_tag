@@ -5,7 +5,7 @@ pipeline {
     environment {
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
         registry = "alwx1753/devops-project"
-        registryCredential = 'dockerhub'
+        registryCredential = 'docker_with_password'
         dockerImage = ''
     }
     stages {

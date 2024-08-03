@@ -161,6 +161,459 @@ UserName: admin Password: prom-operator
 
 ![alt text](image-4.png)
 
+#Логи для исправления
+Лог Jenkins при комите без тега
+
+```
+Started by GitHub push by djohnii
+Obtained project/Jenkinsfile from git git@github.com:djohnii/devops-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on centos_docker in /home/jenkins/workspace/devops_build
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+using credential 7b1133af-2736-42c6-885f-dcd6a61ab961
+Fetching changes from the remote Git repository
+ > git rev-parse --resolve-git-dir /home/jenkins/workspace/devops_build/.git # timeout=10
+ > git config remote.origin.url git@github.com:djohnii/devops-project.git # timeout=10
+Fetching upstream changes from git@github.com:djohnii/devops-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.44.1'
+using GIT_SSH to set credentials 
+ > git fetch --tags --force --progress -- git@github.com:djohnii/devops-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision f1e7f278c31219800176357bc865cb4e184d3b30 (refs/remotes/origin/main)
+Commit message: "Update Jenkinsfile_tag"
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f f1e7f278c31219800176357bc865cb4e184d3b30 # timeout=10
+ > git rev-list --no-walk f9052d0fde61ec24be3024afaafb7ed9df6e1c0b # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
+++ git rev-parse @
++ git describe f1e7f278c31219800176357bc865cb4e184d3b30 --tags --abbrev=0
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (build docker image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /home/jenkins/workspace/devops_build/project/docker
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t alwx1753/devops-project:latest .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 249B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:1.27
+#3 DONE 0.9s
+
+#4 [1/3] FROM docker.io/library/nginx:1.27@sha256:6af79ae5de407283dcea8b00d5c37ace95441fd58a8b1d2aa1ed93f5511bb18c
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 61B done
+#5 DONE 0.0s
+
+#6 [2/3] COPY index.html /usr/share/nginx/html/
+#6 CACHED
+
+#7 [3/3] COPY nginx.conf /etc/nginx/nginx.conf
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+#8 writing image sha256:7bd75a4bc1fa96a4183c6bbf4657c28cb52e51006fb2749fa36a1c6065290ccd done
+#8 naming to docker.io/alwx1753/devops-project:latest done
+#8 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (deploy image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker images --format '{{.Repository}}:{{.Tag}}' --no-trunc
++ head -n 1
+[Pipeline] sh
++ sed -i 's|image:.*|image: alwx1753/devops-project:latest|' project/k8s/myapp/myapp.yml
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withDockerRegistry
+$ docker login -u alwx1753 -p ******** https://index.docker.io/v1/
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/jenkins/workspace/devops_build@tmp/95f1199f-f76e-467e-a84f-25674cee0b0b/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker tag alwx1753/devops-project:latest index.docker.io/alwx1753/devops-project:latest
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker push index.docker.io/alwx1753/devops-project:latest
+The push refers to repository [docker.io/alwx1753/devops-project]
+d54904491421: Preparing
+979aa1490b93: Preparing
+60e72fbb314e: Preparing
+599e8de62018: Preparing
+09581b9299a2: Preparing
+a39383416a22: Preparing
+a6355e7844d5: Preparing
+fcfa12460e7d: Preparing
+e0781bc8667f: Preparing
+a39383416a22: Waiting
+fcfa12460e7d: Waiting
+a6355e7844d5: Waiting
+e0781bc8667f: Waiting
+979aa1490b93: Layer already exists
+d54904491421: Layer already exists
+60e72fbb314e: Layer already exists
+09581b9299a2: Layer already exists
+599e8de62018: Layer already exists
+a6355e7844d5: Layer already exists
+a39383416a22: Layer already exists
+fcfa12460e7d: Layer already exists
+e0781bc8667f: Layer already exists
+latest: digest: sha256:39be527625b1f9b14a39ca6029ac6693989498c034b511b447ddeb8212509713 size: 2192
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (deploy to k8s)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /home/jenkins/workspace/devops_build/project/k8s/myapp
+[Pipeline] {
+[Pipeline] sh
++ cat ./myapp.yml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myapp
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - image: alwx1753/devops-project:latest
+          imagePullPolicy: IfNotPresent
+          name: myapp
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  ports:
+    - name: web
+      port: 32001
+      targetPort: 80
+      # nodePort: 30080
+  selector:
+    app: myapp
+  # type: NodePort
+  type: LoadBalancer
+
+[Pipeline] sh
++ kubectl apply -f ./
+deployment.apps/myapp unchanged
+service/myapp unchanged
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+```
+
+Лог Jenkins при создания нового тега
+
+```
+
+Started by user prey
+Obtained project/Jenkinsfile_tag from git git@github.com:djohnii/devops-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on centos_docker in /home/jenkins/workspace/devops_build
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+using credential 7b1133af-2736-42c6-885f-dcd6a61ab961
+Fetching changes from the remote Git repository
+ > git rev-parse --resolve-git-dir /home/jenkins/workspace/devops_build/.git # timeout=10
+ > git config remote.origin.url git@github.com:djohnii/devops-project.git # timeout=10
+Fetching upstream changes from git@github.com:djohnii/devops-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.44.1'
+using GIT_SSH to set credentials 
+ > git fetch --tags --force --progress -- git@github.com:djohnii/devops-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision bad14df8ff9a5a0f36ae6e4afd3891c5b28073df (refs/remotes/origin/main)
+Commit message: "Update Jenkinsfile_tag"
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f bad14df8ff9a5a0f36ae6e4afd3891c5b28073df # timeout=10
+ > git rev-list --no-walk 32de6b8844ddbfee42182a0f9346ab018bcfa8f4 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout tag)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ git tag --sort=-creatordate
++ head -n 1
+[Pipeline] echo
+gitTag output: v2.2.04
+[Pipeline] dir
+Running in /home/jenkins/workspace/devops_build/project/docker
+[Pipeline] {
+[Pipeline] sh
++ pwd
+/home/jenkins/workspace/devops_build/project/docker
+[Pipeline] sh
++ ls -la
+итого 20
+drwxr-xr-x 2 root root 4096 авг  3 15:59 .
+drwxr-xr-x 7 root root 4096 авг  3 16:50 ..
+-rw-r--r-- 1 root root  210 авг  3 15:59 Dockerfile
+-rw-r--r-- 1 root root  114 авг  3 15:59 index.html
+-rw-r--r-- 1 root root  323 авг  3 15:59 nginx.conf
+[Pipeline] sh
++ docker build -t alwx1753/devops-project:v2.2.04 .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 249B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:1.27
+#3 DONE 0.4s
+
+#4 [1/3] FROM docker.io/library/nginx:1.27@sha256:6af79ae5de407283dcea8b00d5c37ace95441fd58a8b1d2aa1ed93f5511bb18c
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 61B done
+#5 DONE 0.0s
+
+#6 [2/3] COPY index.html /usr/share/nginx/html/
+#6 CACHED
+
+#7 [3/3] COPY nginx.conf /etc/nginx/nginx.conf
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+#8 writing image sha256:7bd75a4bc1fa96a4183c6bbf4657c28cb52e51006fb2749fa36a1c6065290ccd 0.0s done
+#8 naming to docker.io/alwx1753/devops-project:v2.2.04 done
+#8 DONE 0.0s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push docker image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withDockerRegistry
+$ docker login -u alwx1753 -p ******** https://index.docker.io/v1/
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/jenkins/workspace/devops_build@tmp/e0342cb3-7d75-46ce-b61e-a518efb06ee2/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker tag alwx1753/devops-project:v2.2.04 index.docker.io/alwx1753/devops-project:v2.2.04
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker push index.docker.io/alwx1753/devops-project:v2.2.04
+The push refers to repository [docker.io/alwx1753/devops-project]
+d54904491421: Preparing
+979aa1490b93: Preparing
+60e72fbb314e: Preparing
+599e8de62018: Preparing
+09581b9299a2: Preparing
+a39383416a22: Preparing
+a6355e7844d5: Preparing
+fcfa12460e7d: Preparing
+e0781bc8667f: Preparing
+a6355e7844d5: Waiting
+fcfa12460e7d: Waiting
+e0781bc8667f: Waiting
+a39383416a22: Waiting
+09581b9299a2: Layer already exists
+d54904491421: Layer already exists
+60e72fbb314e: Layer already exists
+599e8de62018: Layer already exists
+979aa1490b93: Layer already exists
+a39383416a22: Layer already exists
+e0781bc8667f: Layer already exists
+a6355e7844d5: Layer already exists
+fcfa12460e7d: Layer already exists
+v2.2.04: digest: sha256:39be527625b1f9b14a39ca6029ac6693989498c034b511b447ddeb8212509713 size: 2192
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (deploy to k8s)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /home/jenkins/workspace/devops_build/project/k8s/myapp
+[Pipeline] {
+[Pipeline] sh
++ sed -i 's|image:.*|image: alwx1753/devops-project:v2.2.04|' myapp.yml
+[Pipeline] sh
++ cat ./myapp.yml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myapp
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - image: alwx1753/devops-project:v2.2.04
+          imagePullPolicy: IfNotPresent
+          name: myapp
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  ports:
+    - name: web
+      port: 32001
+      targetPort: 80
+      # nodePort: 30080
+  selector:
+    app: myapp
+  # type: NodePort
+  type: LoadBalancer
+
+[Pipeline] sh
++ kubectl apply -f ./
+deployment.apps/myapp configured
+service/myapp unchanged
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+```
+
+
+
 
 # Решение2: Docker, Gitlub , Gitlab CI, ansible kuberspay (не актуально)
 ##  Docker

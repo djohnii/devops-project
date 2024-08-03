@@ -25,7 +25,7 @@ pipeline {
             steps{
                 script{
                     def latest_docker_image = sh(script: 'docker images --format "{{.Repository}}:{{.Tag}}" --no-trunc | head -n 1', returnStdout: true).trim()
-                    sh "sed -i 's|image:.*|image: latest|' project/k8s/myapp/myapp.yml"                       
+                    sh "sed -i 's|image:.*|image: alwx1753/devops-project:latest|' project/k8s/myapp/myapp.yml"                       
                         // sh "sed -i 's|image:.*|image: ${dockerImage}:latest|' project/k8s/myapp/myapp.yml"
                     docker.withRegistry(DOCKER_REGISTRY, 'docker_with_password') {
                         dockerImage.push("latest")
@@ -40,7 +40,7 @@ pipeline {
                         sh "cat ./myapp.yml"
                         // kubeconfig(credentialsId: 'TokenForKuber', serverUrl: 'https://158.160.38.130') {
                             // sh "sed -i 's|image:.*|image: ${dockerImage}:${taglatest}|' project/k8s/myapp.yml"
-                        sh 'kubectl get pod -n jenkins'
+                        sh 'kubectl get pod '
                         sh 'kubectl apply -f ./'
                         // }
                     }

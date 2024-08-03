@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        label "agent-1"
-    } 
+        label "agent-1" 
+    }
     environment {
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
         registry = "alwx1753/devops-project"
@@ -12,14 +12,12 @@ pipeline {
         stage('Checkout tag') {
             steps{
                 script {
-                    //sh 'git fetch'
-                    gitTag=sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                    gitTag = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                     echo "gitTag output: ${gitTag}"
                     dir('project/docker'){
-                    sh "pwd"
-                    sh "ls -la"
-                    sh "docker build ${registry}:${gitTag}" .
-                       // dockerImage = docker.build registry + ":${gitTag}"
+                        sh "pwd"
+                        sh "ls -la"
+                        sh "docker build -t ${registry}:${gitTag} ."
                     }
                 }
             }
@@ -27,8 +25,9 @@ pipeline {
         stage('Push docker image'){
             steps{
                 script {
-                    docker.withRegistry(DOCKER_REGISTRY, 'docker_with_password') {
-                        dockerImage.push("${gitTag}")
+                    docker.withRegistry(DOCKER_REGISTRY, registryCredential) {
+                        dockerImage = docker.image("${registry}:${gitTag}")
+                        dockerImage.push()
                     }
                 }
             }
@@ -37,7 +36,7 @@ pipeline {
             steps{
                 script{
                     dir('project/k8s/myapp'){
-                        sh "sed -i 's|image:.*|image: alwx1753/devops-project:${gitTag}|' project/k8s/myapp/myapp.yml"
+                        sh "sed -i 's|image:.*|image: ${registry}:${gitTag}|' myapp.yml"
                         sh "cat ./myapp.yml"
                         sh 'kubectl apply -f ./'
                     }
@@ -46,29 +45,3 @@ pipeline {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-// pipeline {
-//     agent any
-//     environment {
-//         registry = "alwx1753/devops-project"
-//         registryCredential = 'dockerhub'
-//         dockerImage = ''
-//     }
-//     stages {
-//         stage('Deploy') {
-//             when { expression { sh([returnStdout: true, script: 'echo $TAG_NAME | tr -d \'\n\'']) } }
-//                 steps {
-//                     echo 'Replace this with your actual deployment steps'
-//             }
-//         }
-//     }
-    
-// }

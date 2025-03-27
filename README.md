@@ -1,4 +1,13 @@
 # devops-project
+
+[![Quality Gate Status](http://172.17.21.97:9000/api/project_badges/measure?project=MMCservice&metric=alert_status)](http://172.17.21.97:9000/dashboard?id=MMCservice)
+[![Coverage](http://172.17.21.97:9000/api/project_badges/measure?project=MMCservice&metric=coverage)](http://172.17.21.97:9000/dashboard?id=MMCservice)
+[![Security Rating](http://172.17.21.97:9000/api/project_badges/measure?project=MMCservice&metric=security_rating)](http://172.17.21.97:9000/dashboard?id=MMCservice)
+[![Vulnerabilities](http://172.17.21.97:9000/api/project_badges/measure?project=MMCservice&metric=vulnerabilities)](http://172.17.21.97:9000/dashboard?id=MMCservice)
+
+
+
+
 # Дипломный практикум в Yandex.Cloud
   * [Цели:](#цели)
   * [Этапы выполнения:](#этапы-выполнения)
